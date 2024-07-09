@@ -1,0 +1,46 @@
+@import url('/src/app/_ezs/plugins/react-select/react-select.css');
+@import url('/src/app/_ezs/plugins/react-datepicker/react-datepicker.css');
+@import url('/src/app/_ezs/plugins/react-toastify/ReactToastify.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+    --ezs-body-bg: #f5f8fa;
+    --ezs-body-color: #181C32;
+    --ezs-element-bg: #fff;
+}
+
+html.dark {
+    --ezs-body-bg: #151521;
+    --ezs-body-color: #FFFFFF;
+    --ezs-element-bg: #1b1b29;
+}
+
+html,
+body {
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--ezs-body-color);
+    font-size: 14px;
+}
+
+#root {
+    height: 100%;
+}
+
+[tabindex],
+*:focus-visible {
+    outline: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background: none;
+}
