@@ -31,6 +31,7 @@
     "react-texty": "^0.6.0",
     "react-toastify": "^10.0.5",
     "react-topbar-progress-indicator": "^4.1.1",
+    "sweetalert2": "^11.12.2",
     "yup": "^1.4.0"
   },
   "devDependencies": {

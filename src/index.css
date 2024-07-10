@@ -1,6 +1,7 @@
 @import url('/src/app/_ezs/plugins/react-select/react-select.css');
 @import url('/src/app/_ezs/plugins/react-datepicker/react-datepicker.css');
 @import url('/src/app/_ezs/plugins/react-toastify/ReactToastify.css');
+@import url('/src/app/_ezs/plugins/sweetalert2/sweetalert.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

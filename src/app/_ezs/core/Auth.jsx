@@ -11,111 +11,111 @@ if (import.meta.env.DEV) {
   window.top.Info = {
     User: {
       ID: 1,
-      FullName: "Admin System",
+      FullName: 'Admin System'
     },
     Stocks: [
       {
-        Title: "Quản lý cơ sở",
+        Title: 'Quản lý cơ sở',
         ID: 778,
-        ParentID: 0,
+        ParentID: 0
       },
       {
-        Title: "Cser Hà Nội",
+        Title: 'Cser Hà Nội',
         ID: 11375,
-        ParentID: 778,
+        ParentID: 778
       },
       {
-        Title: "Cser Hồ Chí Minh",
+        Title: 'Cser Hồ Chí Minh',
         ID: 10053,
-        ParentID: 778,
+        ParentID: 778
       },
       {
-        Title: "Cser Tuyên Quang",
+        Title: 'Cser Tuyên Quang',
         ID: 11210,
-        ParentID: 778,
+        ParentID: 778
       },
       {
-        Title: "CSER NAM HỘI AN",
+        Title: 'CSER NAM HỘI AN',
         ID: 11226,
-        ParentID: 778,
-      },
+        ParentID: 778
+      }
     ],
     rightTree: {
       groups: [
         {
-          group: "Phần mềm",
+          group: 'Phần mềm',
           rights: [
             {
               IsAllStock: true,
               hasRight: true,
-              name: "tele",
+              name: 'course',
               subs: [
                 {
                   IsAllStock: true,
                   hasRight: true,
-                  name: "page_tele_basic",
-                  stocks: "",
+                  name: 'course_co_ban',
+                  stocks: '',
                   stocksList: [
                     {
-                      Title: "Cser Hà Nội",
-                      ID: 8975,
-                      ParentID: 778,
+                      Title: 'Cser Hà Nội',
+                      ID: 11375,
+                      ParentID: 778
                     },
                     {
-                      Title: "Cser Hồ Chí Minh",
+                      Title: 'Cser Hồ Chí Minh',
                       ID: 10053,
-                      ParentID: 778,
+                      ParentID: 778
                     },
                     {
-                      Title: "Cser Tuyên Quang",
+                      Title: 'Cser Tuyên Quang',
                       ID: 11210,
-                      ParentID: 778,
+                      ParentID: 778
                     },
                     {
-                      Title: "CSER NAM HỘI AN",
+                      Title: 'CSER NAM HỘI AN',
                       ID: 11226,
-                      ParentID: 778,
-                    },
-                  ],
+                      ParentID: 778
+                    }
+                  ]
                 },
                 {
                   IsAllStock: true,
                   hasRight: true,
-                  name: "page_tele_adv",
-                  stocks: "",
+                  name: 'course_nang_cao',
+                  stocks: '',
                   stocksList: [
                     {
-                      Title: "Cser Hà Nội",
-                      ID: 8975,
-                      ParentID: 778,
+                      Title: 'Cser Hà Nội',
+                      ID: 11375,
+                      ParentID: 778
                     },
                     {
-                      Title: "Cser Hồ Chí Minh",
+                      Title: 'Cser Hồ Chí Minh',
                       ID: 10053,
-                      ParentID: 778,
+                      ParentID: 778
                     },
                     {
-                      Title: "Cser Tuyên Quang",
+                      Title: 'Cser Tuyên Quang',
                       ID: 11210,
-                      ParentID: 778,
+                      ParentID: 778
                     },
                     {
-                      Title: "CSER NAM HỘI AN",
+                      Title: 'CSER NAM HỘI AN',
                       ID: 11226,
-                      ParentID: 778,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+                      ParentID: 778
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     CrStockID: 11375,
     token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjQiLCJuYmYiOjE3MjA0OTg4NDQsImV4cCI6MTgwNjg5ODg0NCwiaWF0IjoxNzIwNDk4ODQ0fQ.vDFbW1CKj-nAlndQqA0E8JA4SPNKQTpqP66NyEIwK0k",
-  };
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjQiLCJuYmYiOjE3MjA0OTg4NDQsImV4cCI6MTgwNjg5ODg0NCwiaWF0IjoxNzIwNDk4ODQ0fQ.vDFbW1CKj-nAlndQqA0E8JA4SPNKQTpqP66NyEIwK0k'
+  }
 }
 
 const getInfoLocalStorage = () => {
