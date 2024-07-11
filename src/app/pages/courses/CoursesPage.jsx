@@ -6,6 +6,7 @@ import SuspensedView from "src/app/routing/SuspensedView";
 
 const HomePage = lazy(() => import("./pages/Home"));
 const StudentPage = lazy(() => import('./pages/Student'))
+const AttendancePage = lazy(() => import('./pages/Attendance'))
 
 function CoursesPage(props) {
   const { course_co_ban, course_nang_cao } = useRoles(['course_co_ban', 'course_nang_cao'])
@@ -22,10 +23,18 @@ function CoursesPage(props) {
             }
           />
           <Route
-            path=":id"
+            path='student/:id'
             element={
               <SuspensedView>
                 <StudentPage />
+              </SuspensedView>
+            }
+          />
+          <Route
+            path='attendance/:id'
+            element={
+              <SuspensedView>
+                <AttendancePage />
               </SuspensedView>
             }
           />

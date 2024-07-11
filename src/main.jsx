@@ -9,6 +9,7 @@ import { EzsSplashScreenProvider } from "./app/_ezs/core/EzsSplashScreen";
 import { AuthInit, AuthProvider } from "./app/_ezs/core/Auth";
 import AppRoutes from "./app/routing/AppRoutes";
 import moment from "moment";
+import 'moment/dist/locale/vi'
 
 moment.locale("vi");
 

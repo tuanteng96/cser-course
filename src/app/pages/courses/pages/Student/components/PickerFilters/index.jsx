@@ -5,25 +5,25 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, LayoutGroup, m } from 'framer-motion'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from 'src/app/_ezs/partials/button'
-import { SelectStaffs, SelectStatus, SelectStocks, SelectTags } from 'src/app/_ezs/partials/select'
+import { SelectClient } from 'src/app/_ezs/partials/select'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
-import { useAuth } from 'src/app/_ezs/core/Auth'
+import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
+import { useParams } from 'react-router-dom'
 
 function PickerFilters({ children, filters, onChange, isLoading }) {
   const [visible, setVisible] = useState(false)
-  let { CrStocks } = useAuth()
+  let { id } = useParams()
   const { course_nang_cao } = useRoles(['course_nang_cao'])
-
-  const onHide = () => setVisible(false)
 
   let defaultValues = {
     filter: {
-      StockID: CrStocks?.ID || '',
-      Tags: '',
-      Status: '',
-      Teachers: ''
+      MemberID: '',
+      CourseID: id,
+      Status: ''
     }
   }
+
+  const onHide = () => setVisible(false)
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues
@@ -82,13 +82,13 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>
                         <div className='mb-3.5'>
-                          <div className='font-light'>Cơ sở</div>
+                          <div className='font-light'>Học viên</div>
                           <div className='mt-1'>
                             <Controller
-                              name='filter.StockID'
+                              name='filter.MemberID'
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectStocks
+                                <SelectClient
                                   isClearable
                                   className='select-control'
                                   value={field.value}
@@ -98,64 +98,23 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                       ? course_nang_cao?.StockRolesAll
                                       : course_nang_cao.StockRolesAll
                                   }
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Tags</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.Tags'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectTags
-                                  isMulti
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => field.onChange(val)}
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Trạng thái</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.Status'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectStatus
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
                                 />
                               )}
                             />
                           </div>
                         </div>
                         <div>
-                          <div className='font-light'>Giáo viên phụ trách</div>
+                          <div className='font-light'>Trạng thái</div>
                           <div className='mt-1'>
                             <Controller
-                              name='filter.Teachers'
+                              name='filter.Status'
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectStaffs
-                                  isMulti
+                                <SelectStatusStudent
                                   isClearable
                                   className='select-control'
                                   value={field.value}
-                                  onChange={(val) => field.onChange(val ? val.map((x) => x.value) : [])}
-                                  StockRoles={
-                                    course_nang_cao?.hasRight
-                                      ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
-                                  }
+                                  onChange={(val) => field.onChange(val?.value || '')}
                                 />
                               )}
                             />

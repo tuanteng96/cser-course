@@ -45,3 +45,10 @@ input:-webkit-autofill:active {
 input[type="time"]::-webkit-calendar-picker-indicator {
     background: none;
 }
+
+
+/* ** */
+
+.fullcalendar-grow .fc {
+    @apply grow p-5
+}

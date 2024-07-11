@@ -1,5 +1,5 @@
-import { formatArray } from 'src/app/utils/formatArray'
 import { useAuth } from '../core/Auth'
+import { formatArray } from '../utils/formatArray'
 
 const hasRolesAuth = (data) => {
   let newHasRoles = []

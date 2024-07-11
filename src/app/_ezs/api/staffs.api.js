@@ -1,4 +1,4 @@
-import http from "src/app/utils/http"
+import http from "src/app/_ezs/utils/http"
 
 
 const StaffsAPI = {

@@ -39,6 +39,7 @@ html.dark {
 }
 
 .select-control.select-control-error .select__control,
+.select-control.select-control-error .select__control.select__control--is-disabled,
 .select-control.select-control-error .select__control:hover {
     border-color: var(--select-border-error);
 }

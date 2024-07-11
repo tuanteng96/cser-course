@@ -109,7 +109,7 @@ function Home(props) {
         key: 'StockTitle',
         title: 'Cơ sở',
         dataKey: 'StockTitle',
-        width: 250,
+        width: 300,
         sortable: false
       },
       {
@@ -137,18 +137,10 @@ function Home(props) {
         sortable: false
       },
       {
-        key: 'Student',
-        title: 'Học viên',
-        dataKey: 'Student',
-        cellRenderer: ({ rowData }) => rowData?.Student || 0,
-        width: 130,
-        sortable: false
-      },
-      {
         key: 'Teachers',
         title: 'Giáo viên phụ trách',
         dataKey: 'Teachers',
-        width: 280,
+        width: 350,
         sortable: false,
         cellRenderer: ({ rowData }) =>
           rowData?.TeacherList ? rowData?.TeacherList.map((x) => x.FullName).join(', ') : <></>
@@ -162,18 +154,18 @@ function Home(props) {
         cellRenderer: ({ rowData }) => (
           <div className='flex w-full justify-center'>
             <Link
-              to={`${rowData.ID}`}
-              type='button'
+              to={`student/${rowData.ID}`}
               className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer px-3 py-2 transition'
             >
               <UserGroupIcon className='w-5' />
             </Link>
-            <button
-              type='button'
+
+            <Link
+              to={`attendance/${rowData.ID}`}
               className='bg-success hover:bg-successhv text-white text-sm rounded cursor-pointer px-3 py-2 transition mx-[4px]'
             >
               Điểm danh
-            </button>
+            </Link>
             <PickerCourses data={rowData}>
               {({ open }) => (
                 <button
@@ -222,7 +214,7 @@ function Home(props) {
           <PickerFilters
             isLoading={isLoading}
             filters={filters}
-            onChange={(values) => setFilters((prevState) => ({ ...prevState, ...values }))}
+            onChange={(values) => setFilters((prevState) => ({ ...prevState, filter: values.filter }))}
           >
             {({ open }) => (
               <button

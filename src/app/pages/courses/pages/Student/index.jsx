@@ -1,24 +1,29 @@
 import React, { useMemo, useState } from 'react'
 import ReactBaseTable from 'src/app/_ezs/partials/table'
-import { ArrowLeftIcon, Cog6ToothIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { useAuth } from 'src/app/_ezs/core/Auth'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { PickerFilters } from './components'
+import PickerClient from './components/PickerClient'
+import { formatString } from 'src/app/_ezs/utils/formatString'
 
 function Student(props) {
-  let { CrStocks } = useAuth()
+  let { id } = useParams()
   const [filters, setFilters] = useState({
     pi: 1,
     ps: 20,
     filter: {
-      StockID: CrStocks?.ID || '',
-      Tags: '',
-      Status: '',
-      Teachers: ''
+      MemberID: '',
+      CourseID: id,
+      Status: ''
+    },
+    order: {
+      CreateDate: 'desc'
     }
   })
 
@@ -27,23 +32,21 @@ function Student(props) {
   const { course_nang_cao } = useRoles(['course_nang_cao'])
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['ListCourses', filters],
+    queryKey: ['ListStudentCourses', filters],
     queryFn: async () => {
       let newFilters = {
         ...filters,
         filter: {
-          ...filters.filter,
-          Tags: filters.filter.Tags ? filters.filter.Tags.map((x) => x.value).toString() : '',
-          Teachers: filters.filter.Teachers ? filters.filter.Teachers.toString() : ''
+          ...filters.filter
         }
       }
-      let { data } = await CourseAPI.list(newFilters)
+      let { data } = await CourseAPI.listStudentCourse(newFilters)
       return data
     }
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (data) => CourseAPI.deleteCourse(data)
+    mutationFn: (data) => CourseAPI.deleteStudentCourse(data)
   })
 
   const onDelete = (rowData) => {
@@ -54,8 +57,8 @@ function Student(props) {
       customClass: {
         confirmButton: '!bg-danger'
       },
-      title: 'Xóa khóa học ?',
-      html: `Bạn có chắc chắn muốn xóa <span class="text-primary font-medium">${rowData.Title}</span> ? Hành động này không thể được hoàn tác.`,
+      title: 'Xóa học viên ?',
+      html: `Bạn có chắc chắn muốn xóa <span class="text-primary font-medium">${rowData?.Member?.FullName}</span> ? Hành động này không thể được hoàn tác.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Thực hiện xóa',
@@ -82,24 +85,23 @@ function Student(props) {
   const columns = useMemo(
     () => [
       {
-        key: 'FullName',
+        key: 'Member.FullName',
         title: 'Họ và tên',
-        dataKey: 'FullName',
-        cellRenderer: ({ rowData }) => rowData?.FullName,
+        dataKey: 'Member.FullName',
         width: 300,
         sortable: false
       },
       {
-        key: 'Phone',
+        key: 'Member.MobilePhone',
         title: 'Số điện thoại',
-        dataKey: 'Phone',
+        dataKey: 'Member.MobilePhone',
         width: 220,
         sortable: false
       },
       {
-        key: 'Address',
+        key: 'Member.HomeAddress',
         title: 'Địa chỉ',
-        dataKey: 'Address',
+        dataKey: 'Member.HomeAddress',
         width: 300,
         sortable: false
       },
@@ -108,24 +110,30 @@ function Student(props) {
         title: 'Buổi / Tổng',
         dataKey: 'Total',
         width: 160,
-        sortable: false
+        sortable: false,
+        cellRenderer: ({ rowData }) => `0/${rowData?.Course?.Total}`
+      },
+      {
+        key: 'Order.RemainPay',
+        title: 'Nợ',
+        dataKey: 'Order.RemainPay',
+        width: 220,
+        sortable: false,
+        cellRenderer: ({ rowData }) => formatString.formatVND(rowData?.Order?.RemainPay)
       },
       {
         key: 'Status',
-        title: 'Nợ',
-        dataKey: 'Status',
-        cellRenderer: ({ rowData }) => (
-          <>{rowData?.Status ? (Number(rowData?.Status) === 1 ? 'Đang vận hành' : 'Đã kết thúc') : ''}</>
-        ),
-        width: 220,
-        sortable: false
-      },
-      {
-        key: 'Tags',
         title: 'Trạng thái',
-        dataKey: 'Tags',
+        dataKey: 'Status',
         width: 220,
-        sortable: false
+        sortable: false,
+        cellRenderer: ({ rowData }) => (
+          <>
+            {Number(rowData?.Status) === 1 && 'Đã tốt nghiệp'}
+            {Number(rowData?.Status) === 2 && 'Chưa tốt nghiệp'}
+            {Number(rowData?.Status) === 3 && 'Đang tạm dừng'}
+          </>
+        )
       },
       {
         key: 'Desc',
@@ -142,18 +150,26 @@ function Student(props) {
         sortable: false,
         cellRenderer: ({ rowData }) => (
           <div className='flex w-full justify-center'>
-            <button
-              type='button'
-              className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px]'
-            >
-              <PencilIcon className='w-5' />
-            </button>
-            <button
-              type='button'
-              className='bg-danger hover:bg-dangerhv text-white text-sm rounded cursor-pointer p-2 transition'
-            >
-              <TrashIcon className='w-5' />
-            </button>
+            <PickerClient data={rowData}>
+              {({ open }) => (
+                <button
+                  type='button'
+                  className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px]'
+                  onClick={open}
+                >
+                  <PencilIcon className='w-5' />
+                </button>
+              )}
+            </PickerClient>
+            {course_nang_cao.hasRight && (
+              <button
+                type='button'
+                className='bg-danger hover:bg-dangerhv text-white text-sm rounded cursor-pointer p-2 transition'
+                onClick={() => onDelete(rowData)}
+              >
+                <TrashIcon className='w-5' />
+              </button>
+            )}
           </div>
         )
       }
@@ -173,18 +189,32 @@ function Student(props) {
         </div>
 
         <div className='flex'>
-          <button
-            type='button'
-            className='flex items-center px-3.5 border border-gray-300 transition rounded h-12 bg-white font-semibold'
+          <PickerFilters
+            isLoading={isLoading}
+            filters={filters}
+            onChange={(values) => setFilters((prevState) => ({ ...prevState, filter: values.filter }))}
           >
-            Bộ lọc
-          </button>
-          <button
-            type='button'
-            className='flex items-center justify-center h-12 px-2 md:px-5 ml-2 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
-          >
-            Thêm mới
-          </button>
+            {({ open }) => (
+              <button
+                type='button'
+                className='flex items-center px-3.5 border border-gray-300 transition rounded h-12 bg-white font-semibold'
+                onClick={open}
+              >
+                Bộ lọc
+              </button>
+            )}
+          </PickerFilters>
+          <PickerClient>
+            {({ open }) => (
+              <button
+                type='button'
+                className='flex items-center justify-center h-12 px-2 md:px-5 ml-2 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
+                onClick={open}
+              >
+                Thêm mới
+              </button>
+            )}
+          </PickerClient>
         </div>
       </div>
       <ReactBaseTable

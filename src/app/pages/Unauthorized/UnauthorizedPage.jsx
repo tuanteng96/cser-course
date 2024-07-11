@@ -1,4 +1,4 @@
-import { toAbsoluteUrl } from "src/app/utils/assetPath"
+import { toAbsoluteUrl } from "src/app/_ezs/utils/assetPath"
 
 
 function UnauthorizedPage(props) {
