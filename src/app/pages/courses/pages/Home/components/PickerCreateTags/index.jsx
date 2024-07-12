@@ -8,6 +8,7 @@ import {
 } from "@headlessui/react";
 import {
   ChevronDownIcon,
+  PlusIcon,
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -156,7 +157,7 @@ function PickerCreateTags({ children }) {
     <>
       {children({
         open: () => setVisible(true),
-        close: () => setVisible(false),
+        close: () => setVisible(false)
       })}
       <AnimatePresence>
         {visible && (
@@ -164,7 +165,7 @@ function PickerCreateTags({ children }) {
             <LayoutGroup>
               <Dialog open={visible} onClose={onHide}>
                 <m.div
-                  className="fixed inset-0 bg-black/[.2] z-[1003]"
+                  className='fixed inset-0 bg-black/[.2] z-[1003]'
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -172,57 +173,48 @@ function PickerCreateTags({ children }) {
                 <FormProvider {...methods}>
                   <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="fixed inset-0 flex items-center justify-center z-[1003]"
-                    autoComplete="off"
+                    className='fixed inset-0 flex items-center justify-center z-[1003]'
+                    autoComplete='off'
                   >
                     <m.div
-                      className="absolute flex flex-col justify-center h-full py-10 max-w-[500px] w-full px-5 md:px-0"
-                      initial={{ opacity: 0, top: "60%" }}
-                      animate={{ opacity: 1, top: "auto" }}
-                      exit={{ opacity: 0, top: "60%" }}
+                      className='absolute flex flex-col justify-center h-full py-10 max-w-[500px] w-full px-5 md:px-0'
+                      initial={{ opacity: 0, top: '60%' }}
+                      animate={{ opacity: 1, top: 'auto' }}
+                      exit={{ opacity: 0, top: '60%' }}
                     >
-                      <Dialog.Panel
-                        tabIndex={0}
-                        className="flex flex-col w-full max-h-full bg-white rounded shadow-lg"
-                      >
-                        <Dialog.Title className="relative flex justify-between px-5 py-5 border-b border-light">
-                          <div className="text-xl font-bold md:text-2xl">
-                            Cài đặt Tags khóa học
-                          </div>
+                      <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
+                        <Dialog.Title className='relative flex justify-between px-5 md:py-5 py-4 border-b border-light'>
+                          <div className='text-lg font-bold md:text-2xl'>Cài đặt Tags khóa học</div>
                           <div
-                            className="absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4"
+                            className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                             onClick={onHide}
                           >
-                            <XMarkIcon className="w-8" />
+                            <XMarkIcon className='md:w-8 w-6' />
                           </div>
                         </Dialog.Title>
                         <div
                           className={clsx(
-                            "p-5 overflow-auto grow relative",
-                            SettingTagsCourse.isLoading && "min-h-[50%]"
+                            'p-5 overflow-auto grow relative',
+                            SettingTagsCourse.isLoading && 'min-h-[50%]'
                           )}
                         >
-                          <SpinnerComponent
-                            loading={SettingTagsCourse.isLoading}
-                          />
-                          {SettingTagsCourse.isLoading && (
-                            <div className="h-60" />
-                          )}
+                          <SpinnerComponent loading={SettingTagsCourse.isLoading} />
+                          {SettingTagsCourse.isLoading && <div className='h-60' />}
                           {!fields ||
                             (fields.length === 0 && (
                               <div>
                                 Bạn vui lòng chọn
                                 <span
-                                  className="bg-success text-white rounded mx-1.5 text-sm px-2 py-1 cursor-pointer"
+                                  className='bg-success text-white rounded mx-1.5 text-sm px-2 py-1 cursor-pointer'
                                   onClick={() =>
                                     append({
                                       defaultOpen: true,
-                                      label: "",
+                                      label: '',
                                       children: [
                                         {
-                                          label: "",
-                                        },
-                                      ],
+                                          label: ''
+                                        }
+                                      ]
                                     })
                                   }
                                 >
@@ -233,53 +225,38 @@ function PickerCreateTags({ children }) {
                             ))}
                           {fields &&
                             fields.map((field, index) => (
-                              <div className="mb-3.5 last:mb-0" key={field.id}>
+                              <div className='mb-3.5 last:mb-0' key={field.id}>
                                 <Disclosure defaultOpen={field.defaultOpen}>
                                   {({ open }) => (
                                     <div>
-                                      <div className="flex">
-                                        <div className="flex-1">
+                                      <div className='flex'>
+                                        <div className='flex-1'>
                                           <Controller
                                             name={`Tags.${index}.label`}
                                             control={control}
-                                            render={({
-                                              field: { ref, ...field },
-                                              fieldState,
-                                            }) => (
+                                            render={({ field: { ref, ...field }, fieldState }) => (
                                               <Input
-                                                placeholder="Nhập tên nhóm Tags"
+                                                placeholder='Nhập tên nhóm Tags'
                                                 value={field.value}
                                                 onChange={field.onChange}
-                                                errorMessageForce={
-                                                  fieldState?.invalid
-                                                }
-                                                errorMessage={
-                                                  fieldState?.error?.message
-                                                }
+                                                errorMessageForce={fieldState?.invalid}
+                                                errorMessage={fieldState?.error?.message}
                                               />
                                             )}
                                           />
                                         </div>
                                         <button
-                                          className="bg-danger hover:bg-dangerhv text-white rounded cursor-pointer px-2 transition h-[44px] w-10 mx-1.5"
+                                          className='bg-danger hover:bg-dangerhv text-white rounded cursor-pointer px-2 transition h-[44px] w-10 mx-1.5'
                                           onClick={() => remove(index)}
                                         >
-                                          <TrashIcon className="w-6" />
+                                          <TrashIcon className='w-6' />
                                         </button>
-                                        <DisclosureButton className="flex items-center justify-center w-10 bg-[#E4E6EF] rounded">
-                                          <ChevronDownIcon
-                                            className={clsx(
-                                              "w-5",
-                                              open && "rotate-180"
-                                            )}
-                                          />
+                                        <DisclosureButton className='flex items-center justify-center w-10 bg-[#E4E6EF] rounded'>
+                                          <ChevronDownIcon className={clsx('w-5', open && 'rotate-180')} />
                                         </DisclosureButton>
                                       </div>
                                       <DisclosurePanel>
-                                        <TagsSubs
-                                          Title={field.label}
-                                          name={`Tags.${index}.children`}
-                                        />
+                                        <TagsSubs Title={field.label} name={`Tags.${index}.children`} />
                                       </DisclosurePanel>
                                     </div>
                                   )}
@@ -287,30 +264,31 @@ function PickerCreateTags({ children }) {
                               </div>
                             ))}
                         </div>
-                        <div className="flex justify-between p-5 border-t border-light">
+                        <div className='flex justify-between p-5 border-t border-light'>
                           <div>
                             <Button
-                              type="button"
-                              className="relative flex items-center h-12 px-5 ml-2 text-white transition rounded shadow-lg bg-success hover:bg-successhv focus:outline-none focus:shadow-none disabled:opacity-70"
+                              type='button'
+                              className='relative flex items-center h-12 px-5 text-white transition rounded shadow-lg bg-success hover:bg-successhv focus:outline-none focus:shadow-none disabled:opacity-70'
                               onClick={() =>
                                 append({
                                   defaultOpen: true,
-                                  label: "",
+                                  label: '',
                                   children: [
                                     {
-                                      label: "",
-                                    },
-                                  ],
+                                      label: ''
+                                    }
+                                  ]
                                 })
                               }
                             >
-                              Thêm nhóm Tags
+                              <span className="hidden md:block">Thêm nhóm Tags</span>
+                              <PlusIcon className='w-6 md:hidden' />
                             </Button>
                           </div>
-                          <div className="flex">
+                          <div className='flex'>
                             <button
-                              type="button"
-                              className="relative flex items-center h-12 px-5 transition border rounded shadow-lg border-light hover:border-gray-800 focus:outline-none focus:shadow-none"
+                              type='button'
+                              className='relative flex items-center h-12 px-5 transition border rounded shadow-lg border-light hover:border-gray-800 focus:outline-none focus:shadow-none'
                               onClick={onHide}
                             >
                               Đóng
@@ -318,8 +296,8 @@ function PickerCreateTags({ children }) {
                             <Button
                               disabled={addMutation.isPending}
                               loading={addMutation.isPending}
-                              type="submit"
-                              className="relative flex items-center h-12 px-5 ml-2 text-white transition rounded shadow-lg bg-primary hover:bg-primaryhv focus:outline-none focus:shadow-none disabled:opacity-70"
+                              type='submit'
+                              className='relative flex items-center h-12 px-5 ml-2 text-white transition rounded shadow-lg bg-primary hover:bg-primaryhv focus:outline-none focus:shadow-none disabled:opacity-70'
                             >
                               Cập nhập
                             </Button>
@@ -335,7 +313,7 @@ function PickerCreateTags({ children }) {
         )}
       </AnimatePresence>
     </>
-  );
+  )
 }
 
 export default PickerCreateTags;

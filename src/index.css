@@ -52,3 +52,42 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .fullcalendar-grow .fc {
     @apply grow p-5
 }
+
+.fc .fc-datagrid-cell-cushion {
+    @apply h-full flex items-center font-bold p-4
+}
+
+.fc .fc-timeline-slot-cushion {
+    @apply pointer-events-none
+}
+
+
+/* .fc .fc-scroller-liquid-absolute {
+    padding-bottom: var(--width-scroll);
+} */
+
+.fc-datagrid-cell.fc-resource .fc-datagrid-cell-frame {
+    @apply !min-h-[111px]
+}
+
+.fc .fc-event-main {
+    flex-grow: initial;
+    @apply h-full w-full
+}
+
+.fc-event:focus::after {
+    @apply hidden
+}
+
+.fc-event:focus {
+    @apply shadow-none
+}
+
+.fc-datagrid-cell-main {
+    @apply break-normal
+}
+
+
+/* .fc .fc-timeline-event-harness {
+    @apply h-full
+} */

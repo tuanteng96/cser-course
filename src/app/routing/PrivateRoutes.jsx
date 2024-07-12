@@ -1,25 +1,17 @@
-import { lazy } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import SuspensedView from "./SuspensedView";
+import { lazy } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
-const CoursesPage = lazy(() => import("../pages/courses"));
+const CoursesPage = lazy(() => import('../pages/courses'))
 
 function PrivateRoutes() {
   return (
     <>
       <Routes>
-        <Route
-          path="courses/*"
-          element={
-            <SuspensedView>
-              <CoursesPage />
-            </SuspensedView>
-          }
-        />
-        <Route index element={<Navigate to="/courses" />} />
+        <Route path='courses/*' element={<CoursesPage />} />
+        <Route index element={<Navigate to='/courses' />} />
       </Routes>
     </>
-  );
+  )
 }
 
-export default PrivateRoutes;
+export default PrivateRoutes

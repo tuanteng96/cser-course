@@ -1,7 +1,13 @@
 import React, { useMemo, useState } from 'react'
 import ReactBaseTable from 'src/app/_ezs/partials/table'
 import { PickerCourses, PickerFilters } from './components'
-import { Cog6ToothIcon, PencilIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import {
+  AdjustmentsVerticalIcon,
+  Cog6ToothIcon,
+  PencilIcon,
+  TrashIcon,
+  UserGroupIcon
+} from '@heroicons/react/24/outline'
 import PickerCreateTags from './components/PickerCreateTags'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
@@ -10,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { useAuth } from 'src/app/_ezs/core/Auth'
 import { Link } from 'react-router-dom'
+import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 
 function Home(props) {
   let { CrStocks } = useAuth()
@@ -23,6 +30,8 @@ function Home(props) {
       Teachers: ''
     }
   })
+
+  let { width } = useWindowSize()
 
   const { course_nang_cao } = useRoles(['course_nang_cao'])
 
@@ -93,7 +102,7 @@ function Home(props) {
         key: 'Title',
         title: 'Tên khóa học',
         dataKey: 'Title',
-        width: 300,
+        width: width > 767 ? 300 : 200,
         sortable: false,
         cellRenderer: ({ rowData }) => (
           <PickerCourses data={rowData}>
@@ -109,14 +118,15 @@ function Home(props) {
         key: 'StockTitle',
         title: 'Cơ sở',
         dataKey: 'StockTitle',
-        width: 300,
-        sortable: false
+        width: width > 767 ? 300 : 200,
+        sortable: false,
+        cellRenderer: ({ rowData }) => rowData?.StockTitle
       },
       {
         key: 'Total',
         title: 'Số buổi',
         dataKey: 'Total',
-        width: 160,
+        width: width > 767 ? 160 : 120,
         sortable: false
       },
       {
@@ -126,7 +136,7 @@ function Home(props) {
         cellRenderer: ({ rowData }) => (
           <>{rowData?.Status ? (Number(rowData?.Status) === 1 ? 'Đang vận hành' : 'Đã kết thúc') : ''}</>
         ),
-        width: 200,
+        width: width > 767 ? 200 : 150,
         sortable: false
       },
       {
@@ -140,7 +150,7 @@ function Home(props) {
         key: 'Teachers',
         title: 'Giáo viên phụ trách',
         dataKey: 'Teachers',
-        width: 350,
+        width: width > 767 ? 350 : 250,
         sortable: false,
         cellRenderer: ({ rowData }) =>
           rowData?.TeacherList ? rowData?.TeacherList.map((x) => x.FullName).join(', ') : <></>
@@ -191,22 +201,22 @@ function Home(props) {
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [width]
   )
 
   return (
     <div className='h-full flex flex-col'>
-      <div className='flex justify-between items-center px-5 py-4 border-b'>
-        <div className='text-3xl font-bold'>Khóa đào tạo</div>
+      <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
+        <div className='text-xl md:text-3xl font-bold'>Khóa đào tạo</div>
         <div className='flex'>
           <PickerCreateTags>
             {({ open }) => (
               <button
                 type='button'
                 onClick={open}
-                className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-12 w-12 mr-2.5'
+                className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-11 md:h-12 w-11 md:w-12 mr-1.5 md:mr-2.5'
               >
-                <Cog6ToothIcon className='w-7' />
+                <Cog6ToothIcon className='w-6 md:w-7' />
               </button>
             )}
           </PickerCreateTags>
@@ -219,10 +229,11 @@ function Home(props) {
             {({ open }) => (
               <button
                 type='button'
-                className='flex items-center px-3.5 border border-gray-300 transition rounded h-12 bg-white font-semibold'
+                className='flex items-center px-2.5 md:px-3.5 border border-gray-300 transition rounded h-11 md:h-12 bg-white font-semibold'
                 onClick={open}
               >
-                Bộ lọc
+                <span className='hidden md:block'>Bộ lọc</span>
+                <AdjustmentsVerticalIcon className='w-6 md:hidden' />
               </button>
             )}
           </PickerFilters>
@@ -231,7 +242,7 @@ function Home(props) {
             {({ open }) => (
               <button
                 type='button'
-                className='flex items-center justify-center h-12 px-2 md:px-5 ml-2 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
+                className='flex items-center justify-center h-11 md:h-12 px-2 md:px-5 ml-1.5 md:ml-2.5 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
                 onClick={open}
               >
                 Thêm mới

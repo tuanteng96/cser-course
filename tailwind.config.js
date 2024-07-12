@@ -19,6 +19,7 @@ export default {
                 "info": "#8950FC",
                 "warning": "#FFA800",
                 "danger": "#F64E60",
+                "dangerhv": "#EE2D41",
                 "light": "#EBEDF3",
                 "muted": "#B5B5C3",
                 "gray": {

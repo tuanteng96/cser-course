@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from 'react'
 import ReactBaseTable from 'src/app/_ezs/partials/table'
-import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { AdjustmentsVerticalIcon, ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
-import { useAuth } from 'src/app/_ezs/core/Auth'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PickerFilters } from './components'
 import PickerClient from './components/PickerClient'
 import { formatString } from 'src/app/_ezs/utils/formatString'
+import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 
 function Student(props) {
   let { id } = useParams()
@@ -26,6 +26,8 @@ function Student(props) {
       CreateDate: 'desc'
     }
   })
+
+  let { width } = useWindowSize()
 
   const navigate = useNavigate()
 
@@ -88,28 +90,30 @@ function Student(props) {
         key: 'Member.FullName',
         title: 'Họ và tên',
         dataKey: 'Member.FullName',
-        width: 300,
-        sortable: false
+        width: width > 767 ? 300 : 180,
+        sortable: false,
+        cellRenderer: ({ rowData }) => rowData?.Member?.FullName
       },
       {
         key: 'Member.MobilePhone',
         title: 'Số điện thoại',
         dataKey: 'Member.MobilePhone',
-        width: 220,
+        width: width > 767 ? 220 : 140,
         sortable: false
       },
       {
         key: 'Member.HomeAddress',
         title: 'Địa chỉ',
         dataKey: 'Member.HomeAddress',
-        width: 300,
-        sortable: false
+        width: width > 767 ? 300 : 200,
+        sortable: false,
+        cellRenderer: ({ rowData }) => rowData?.Member?.HomeAddress
       },
       {
         key: 'Total',
         title: 'Buổi / Tổng',
         dataKey: 'Total',
-        width: 160,
+        width: width > 767 ? 160 : 120,
         sortable: false,
         cellRenderer: ({ rowData }) => `0/${rowData?.Course?.Total}`
       },
@@ -117,7 +121,7 @@ function Student(props) {
         key: 'Order.RemainPay',
         title: 'Nợ',
         dataKey: 'Order.RemainPay',
-        width: 220,
+        width: width > 767 ? 220 : 150,
         sortable: false,
         cellRenderer: ({ rowData }) => formatString.formatVND(rowData?.Order?.RemainPay)
       },
@@ -125,7 +129,7 @@ function Student(props) {
         key: 'Status',
         title: 'Trạng thái',
         dataKey: 'Status',
-        width: 220,
+        width: width > 767 ? 220 : 150,
         sortable: false,
         cellRenderer: ({ rowData }) => (
           <>
@@ -139,14 +143,14 @@ function Student(props) {
         key: 'Desc',
         title: 'Ghi chú',
         dataKey: 'Desc',
-        width: 300,
+        width: width > 767 ? 300 : 200,
         sortable: false
       },
       {
         key: '#',
         title: '',
         dataKey: '#',
-        width: 150,
+        width: width > 767 ? 150 : 100,
         sortable: false,
         cellRenderer: ({ rowData }) => (
           <div className='flex w-full justify-center'>
@@ -175,17 +179,18 @@ function Student(props) {
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [width]
   )
 
   return (
     <div className='h-full flex flex-col'>
-      <div className='flex justify-between items-center px-5 py-4 border-b'>
+      <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
         <div className='flex items-center'>
           <div className='cursor-pointer' onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className='w-8' />
+            <ArrowLeftIcon className='w-7 md:w-8' />
           </div>
-          <div className='text-3xl font-bold pl-4'>Danh sách học viên</div>
+          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>Danh sách học viên</div>
+          <div className='text-xl md:text-3xl font-bold pl-4 md:hidden'>DS Học viên</div>
         </div>
 
         <div className='flex'>
@@ -197,10 +202,11 @@ function Student(props) {
             {({ open }) => (
               <button
                 type='button'
-                className='flex items-center px-3.5 border border-gray-300 transition rounded h-12 bg-white font-semibold'
+                className='flex items-center px-2.5 md:px-3.5 border border-gray-300 transition rounded h-11 md:h-12 bg-white font-semibold'
                 onClick={open}
               >
-                Bộ lọc
+                <span className='hidden md:block'>Bộ lọc</span>
+                <AdjustmentsVerticalIcon className='w-6 md:hidden' />
               </button>
             )}
           </PickerFilters>
@@ -208,7 +214,7 @@ function Student(props) {
             {({ open }) => (
               <button
                 type='button'
-                className='flex items-center justify-center h-12 px-2 md:px-5 ml-2 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
+                className='flex items-center justify-center h-11 md:h-12 px-2 md:px-5 md:ml-2 ml-1.5 text-white transition border rounded bg-primary border-primary hover:bg-primaryhv hover:border-primaryhv text-[14px] md:text-base'
                 onClick={open}
               >
                 Thêm mới

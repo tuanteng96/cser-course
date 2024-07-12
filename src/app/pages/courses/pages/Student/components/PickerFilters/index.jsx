@@ -71,13 +71,13 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                     exit={{ opacity: 0, top: '60%' }}
                   >
                     <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
-                      <Dialog.Title className='relative flex justify-between px-5 py-5 border-b border-light'>
-                        <div className='text-xl font-bold md:text-2xl'>Bộ lọc</div>
+                      <Dialog.Title className='relative flex justify-between px-5 md:py-5 py-4 border-b border-light'>
+                        <div className='text-lg font-bold md:text-2xl'>Bộ lọc</div>
                         <div
                           className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                           onClick={onHide}
                         >
-                          <XMarkIcon className='w-8' />
+                          <XMarkIcon className='md:w-8 w-6' />
                         </div>
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>

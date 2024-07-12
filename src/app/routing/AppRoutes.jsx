@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import App from "../App";
 import SuspensedView from "./SuspensedView";
@@ -22,6 +22,10 @@ export default function AppRoutes() {
             }
           />
           <Route path='/*' element={<PrivateRoutes />} />
+          <Route
+            path='/Admin/Courses/index.html'
+            element={<Navigate to={`/`} replace />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

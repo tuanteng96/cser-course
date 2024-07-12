@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import 'react-texty/styles.css'
 import "./index.css";
 
 import { EzsSplashScreenProvider } from "./app/_ezs/core/EzsSplashScreen";

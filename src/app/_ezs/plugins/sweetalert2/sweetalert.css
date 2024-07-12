@@ -60,3 +60,13 @@ body .swal2-styled.swal2-cancel {
 body .swal2-styled.swal2-cancel:focus {
     box-shadow: var(--swl2-btn-cancel-shadow);
 }
+
+@media (max-width: 767px) {
+    body div:where(.swal2-container) .swal2-html-container {
+        font-size: 14px;
+        line-height: 22px;
+    }
+    body .swal2-title {
+        font-size: 20px;
+    }
+}
