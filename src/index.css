@@ -87,6 +87,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     @apply break-normal
 }
 
+.fc-event-today {
+    @apply !bg-[#fac4ca] relative
+}
+
+.fc-event-today::before {
+    @apply absolute w-full h-[10px] top-full left-0 bg-[#fac4ca] content-['']
+}
+
+.fc-day-today .fc-timeline-slot-frame {
+    @apply text-danger
+}
+
 
 /* .fc .fc-timeline-event-harness {
     @apply h-full

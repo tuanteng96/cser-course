@@ -6,7 +6,7 @@ import CourseAPI from 'src/app/_ezs/api/course.api'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PickerFilters } from './components'
 import PickerClient from './components/PickerClient'
 import { formatString } from 'src/app/_ezs/utils/formatString'
@@ -20,7 +20,8 @@ function Student(props) {
     filter: {
       MemberID: '',
       CourseID: id,
-      Status: ''
+      Status: '',
+      Places: ''
     },
     order: {
       CreateDate: 'desc'
@@ -30,6 +31,8 @@ function Student(props) {
   let { width } = useWindowSize()
 
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
 
   const { course_nang_cao } = useRoles(['course_nang_cao'])
 
@@ -39,7 +42,8 @@ function Student(props) {
       let newFilters = {
         ...filters,
         filter: {
-          ...filters.filter
+          ...filters.filter,
+          Places: filters.filter?.Places ? filters.filter?.Places?.value : ''
         }
       }
       let { data } = await CourseAPI.listStudentCourse(newFilters)
@@ -92,7 +96,11 @@ function Student(props) {
         dataKey: 'Member.FullName',
         width: width > 767 ? 300 : 180,
         sortable: false,
-        cellRenderer: ({ rowData }) => rowData?.Member?.FullName
+        cellRenderer: ({ rowData }) => (
+          <div>
+            <div>{rowData?.Member?.FullName}</div>
+          </div>
+        )
       },
       {
         key: 'Member.MobilePhone',
@@ -100,6 +108,14 @@ function Student(props) {
         dataKey: 'Member.MobilePhone',
         width: width > 767 ? 220 : 140,
         sortable: false
+      },
+      {
+        key: 'Places',
+        title: 'Ký túc xá',
+        dataKey: 'Places',
+        width: width > 767 ? 250 : 200,
+        sortable: false,
+        cellRenderer: ({ rowData }) => rowData?.Places
       },
       {
         key: 'Member.HomeAddress',
@@ -115,7 +131,7 @@ function Student(props) {
         dataKey: 'Total',
         width: width > 767 ? 160 : 120,
         sortable: false,
-        cellRenderer: ({ rowData }) => `0/${rowData?.Course?.Total}`
+        cellRenderer: ({ rowData }) => `${rowData?.TotalCheck}/${rowData?.Course?.Total}`
       },
       {
         key: 'Order.RemainPay',
@@ -175,7 +191,8 @@ function Student(props) {
               </button>
             )}
           </div>
-        )
+        ),
+        frozen: width > 767 ? 'right' : false
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,8 +206,12 @@ function Student(props) {
           <div className='cursor-pointer' onClick={() => navigate(-1)}>
             <ArrowLeftIcon className='w-7 md:w-8' />
           </div>
-          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>Danh sách học viên</div>
-          <div className='text-xl md:text-3xl font-bold pl-4 md:hidden'>DS Học viên</div>
+          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>
+            DS học viên <span className='text-base text-primary'>{searchParams.get('title')}</span>
+          </div>
+          <div className='text-xl md:text-3xl font-bold pl-4 md:hidden'>
+            DS Học viên <div className='text-sm text-primary'>{searchParams.get('title')}</div>
+          </div>
         </div>
 
         <div className='flex'>

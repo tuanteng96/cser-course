@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import ReactBaseTable from 'src/app/_ezs/partials/table'
-import { PickerCourses, PickerFilters } from './components'
+import { PickerCourses, PickerCreateTags, PickerDormitory, PickerFilters } from './components'
 import {
   AdjustmentsVerticalIcon,
   Cog6ToothIcon,
@@ -8,7 +8,6 @@ import {
   TrashIcon,
   UserGroupIcon
 } from '@heroicons/react/24/outline'
-import PickerCreateTags from './components/PickerCreateTags'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
 import Swal from 'sweetalert2'
@@ -17,6 +16,7 @@ import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { useAuth } from 'src/app/_ezs/core/Auth'
 import { Link } from 'react-router-dom'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 
 function Home(props) {
   let { CrStocks } = useAuth()
@@ -34,7 +34,7 @@ function Home(props) {
   let { width } = useWindowSize()
 
   const { course_nang_cao } = useRoles(['course_nang_cao'])
-
+  
   const { isLoading, data, refetch } = useQuery({
     queryKey: ['ListCourses', filters],
     queryFn: async () => {
@@ -164,14 +164,14 @@ function Home(props) {
         cellRenderer: ({ rowData }) => (
           <div className='flex w-full justify-center'>
             <Link
-              to={`student/${rowData.ID}`}
+              to={`student/${rowData.ID}?title=${rowData.Title}`}
               className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer px-3 py-2 transition'
             >
               <UserGroupIcon className='w-5' />
             </Link>
 
             <Link
-              to={`attendance/${rowData.ID}`}
+              to={`attendance/${rowData.ID}?title=${rowData.Title}`}
               className='bg-success hover:bg-successhv text-white text-sm rounded cursor-pointer px-3 py-2 transition mx-[4px]'
             >
               Điểm danh
@@ -197,7 +197,8 @@ function Home(props) {
               </button>
             )}
           </div>
-        )
+        ),
+        frozen: width > 767 ? 'right' : false
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,18 +210,33 @@ function Home(props) {
       <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
         <div className='text-xl md:text-3xl font-bold'>Khóa đào tạo</div>
         <div className='flex'>
-          <PickerCreateTags>
-            {({ open }) => (
-              <button
-                type='button'
-                onClick={open}
-                className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-11 md:h-12 w-11 md:w-12 mr-1.5 md:mr-2.5'
-              >
-                <Cog6ToothIcon className='w-6 md:w-7' />
-              </button>
-            )}
-          </PickerCreateTags>
-
+          <Popover className='relative'>
+            <PopoverButton className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-11 md:h-12 w-11 md:w-12 mr-1.5 md:mr-2.5'>
+              <Cog6ToothIcon className='w-6 md:w-7' />
+            </PopoverButton>
+            <PopoverPanel anchor='bottom end' className='flex flex-col bg-white shadow-lg py-2 rounded'>
+              <PickerCreateTags>
+                {({ open }) => (
+                  <div
+                    className='px-5 py-2.5 cursor-pointer text-[#181C32] hover:bg-[#EBEDF3] hover:text-[#101221]'
+                    onClick={open}
+                  >
+                    Tags khóa học
+                  </div>
+                )}
+              </PickerCreateTags>
+              <PickerDormitory>
+                {({ open }) => (
+                  <div
+                    className='px-5 py-2.5 cursor-pointer text-[#181C32] hover:bg-[#EBEDF3] hover:text-[#101221]'
+                    onClick={open}
+                  >
+                    Ký túc xá
+                  </div>
+                )}
+              </PickerDormitory>
+            </PopoverPanel>
+          </Popover>
           <PickerFilters
             isLoading={isLoading}
             filters={filters}

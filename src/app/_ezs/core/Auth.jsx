@@ -26,17 +26,27 @@ if (import.meta.env.DEV) {
       },
       {
         Title: 'Cser Hồ Chí Minh',
-        ID: 10053,
+        ID: 11376,
         ParentID: 778
       },
       {
-        Title: 'Cser Tuyên Quang',
-        ID: 11210,
+        Title: 'Cser Đà Nẵng',
+        ID: 11377,
         ParentID: 778
       },
       {
-        Title: 'CSER NAM HỘI AN',
-        ID: 11226,
+        Title: 'cser Bà nà',
+        ID: 11381,
+        ParentID: 778
+      },
+      {
+        Title: "Cơ sở A",
+        ID: 11382,
+        ParentID: 778
+      },
+      {
+        Title:  "Cơ sở B",
+        ID: 11383,
         ParentID: 778
       }
     ],
@@ -51,60 +61,23 @@ if (import.meta.env.DEV) {
               name: 'course',
               subs: [
                 {
-                  IsAllStock: true,
+                  IsAllStock: false,
                   hasRight: true,
                   name: 'course_co_ban',
                   stocks: '',
                   stocksList: [
                     {
-                      Title: 'Cser Hà Nội',
-                      ID: 11375,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'Cser Hồ Chí Minh',
-                      ID: 10053,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'Cser Tuyên Quang',
-                      ID: 11210,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'CSER NAM HỘI AN',
-                      ID: 11226,
+                      Title: "Cơ sở A",
+                      ID: 11382,
                       ParentID: 778
                     }
                   ]
                 },
                 {
-                  IsAllStock: true,
-                  hasRight: true,
+                  IsAllStock: false,
+                  hasRight: false,
                   name: 'course_nang_cao',
                   stocks: '',
-                  stocksList: [
-                    {
-                      Title: 'Cser Hà Nội',
-                      ID: 11375,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'Cser Hồ Chí Minh',
-                      ID: 10053,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'Cser Tuyên Quang',
-                      ID: 11210,
-                      ParentID: 778
-                    },
-                    {
-                      Title: 'CSER NAM HỘI AN',
-                      ID: 11226,
-                      ParentID: 778
-                    }
-                  ]
                 }
               ]
             }
@@ -112,7 +85,7 @@ if (import.meta.env.DEV) {
         }
       ]
     },
-    CrStockID: 11375,
+    CrStockID: 11382,
     token:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjQiLCJuYmYiOjE3MjA0OTg4NDQsImV4cCI6MTgwNjg5ODg0NCwiaWF0IjoxNzIwNDk4ODQ0fQ.vDFbW1CKj-nAlndQqA0E8JA4SPNKQTpqP66NyEIwK0k'
   }

@@ -3,15 +3,15 @@ import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/rea
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
 import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction'
+import scrollGridPlugin from '@fullcalendar/scrollgrid'
 
 import moment from 'moment'
 import { toast } from 'react-toastify'
 import { ModalAttendance } from './components'
-import { InputDatePickerSolid } from 'src/app/_ezs/partials/forms/input/InputDatePickerSolid'
 import { InputDatePicker } from 'src/app/_ezs/partials/forms'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 
@@ -55,6 +55,8 @@ function Attendance(props) {
   const [inititalValues, setInitialValues] = useState(null)
 
   const navigate = useNavigate()
+
+  const [searchParams] = useSearchParams()
 
   let { width } = useWindowSize()
 
@@ -175,7 +177,12 @@ function Attendance(props) {
           <div className='cursor-pointer' onClick={() => navigate(-1)}>
             <ArrowLeftIcon className='w-8' />
           </div>
-          <div className='text-xl md:text-3xl font-bold pl-4'>Điểm danh</div>
+          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>
+            Điểm danh <span className='text-base text-primary'>{searchParams.get('title')}</span>
+          </div>
+          <div className='text-xl md:text-3xl font-bold pl-4 md:hidden w-[130px] pr-2'>
+            Điểm danh <div className='text-sm text-primary truncate'>{searchParams.get('title')}</div>
+          </div>
         </div>
 
         <div className='flex'>
@@ -243,7 +250,7 @@ function Attendance(props) {
         themeSystem='unthemed'
         locale={viLocales}
         headerToolbar={false}
-        plugins={[resourceTimelinePlugin, interactionPlugin]}
+        plugins={[resourceTimelinePlugin, interactionPlugin, scrollGridPlugin]}
         initialDate={moment(filters.filter.CreateDate).format('YYYY-MM-DD')}
         initialView={'resourceTimelineWeek'}
         handleWindowResize={true}
@@ -258,6 +265,7 @@ function Attendance(props) {
             resourceAreaHeaderContent: () => (width > 767 ? 'Danh sách học viên' : 'DS Học viên'),
             nowIndicator: true,
             now: moment(new Date()).format('YYYY-MM-DD HH:mm'),
+            scrollTime: moment(new Date()).format('YYYY-MM-DD HH:mm'),
             //resourceLabelContent: () => 'A',
             slotDuration: {
               days: 1
@@ -269,6 +277,10 @@ function Attendance(props) {
               // Date click
             }
           }
+        }}
+        datesSet={(dateInfo) => {
+          const diffDays = Math.abs(new Date() - dateInfo.start) / (1000 * 60 * 60 * 24)
+          dateInfo.view.calendar.scrollToTime({ days: diffDays })
         }}
         ref={calendarRef}
         events={data || []}
@@ -285,6 +297,7 @@ function Attendance(props) {
               <div class="text-success font-bold text-sm">Điểm danh lúc ${moment(extendedProps.CreateDate).format(
                 'HH:mm'
               )}</div>
+              <div class="text-black/70 px-4 text-center truncate w-full">${extendedProps.Desc}</div>
               <div class="w-10 h-10 flex items-center justify-center rounded-full mt-3 bg-success shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4"> <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /> </svg>
               </div>

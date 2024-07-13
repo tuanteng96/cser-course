@@ -1,5 +1,6 @@
-import PickerCourses from "../components/PickerCourses";
-import PickerFilters from "../components/PickerFilters";
-import PickerCreateTags from "../components/PickerCreateTags";
+import PickerCourses from "./PickerCourses";
+import PickerFilters from "./PickerFilters";
+import PickerCreateTags from "./PickerCreateTags";
+import PickerDormitory from "./PickerDormitory";
 
-export { PickerCourses, PickerFilters };
+export { PickerCourses, PickerFilters, PickerDormitory, PickerCreateTags };

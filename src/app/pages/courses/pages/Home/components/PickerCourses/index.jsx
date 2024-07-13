@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
 import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
+import { useAuth } from 'src/app/_ezs/core/Auth'
 
 const schemaAddEdit = yup.object().shape({
   Title: yup.string().required('Vui lòng nhập tên khóa học')
@@ -25,15 +26,19 @@ function PickerCourses({ children, data }) {
 
   let isAddMode = Boolean(!(data?.ID > 0))
 
-  const { course_nang_cao } = useRoles(['course_nang_cao'])
-
-  const onHide = () => setVisible(false)
+  let { CrStocks } = useAuth()
+  const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
+  
+  const onHide = () => {
+    setVisible(false)
+    reset()
+  }
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       ID: 0,
       Title: '',
-      StockID: 0,
+      StockID: CrStocks?.ID,
       Total: '',
       Status: '',
       Teachers: [],
@@ -87,7 +92,7 @@ function PickerCourses({ children, data }) {
     <>
       {children({
         open: () => setVisible(true),
-        close: () => setVisible(false)
+        close: onHide
       })}
       <AnimatePresence>
         {visible && (
@@ -157,7 +162,7 @@ function PickerCourses({ children, data }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
                                 />
                               )}
@@ -233,7 +238,7 @@ function PickerCourses({ children, data }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
                                 />
                               )}

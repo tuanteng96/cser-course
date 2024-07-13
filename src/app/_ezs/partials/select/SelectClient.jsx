@@ -14,7 +14,7 @@ const SelectClient = ({
   className,
   ...props
 }) => {
-  const ListMembers = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['ListMemberSelect'],
     queryFn: async () => {
       const data = await ClientsAPI.listSelect({
@@ -53,11 +53,7 @@ const SelectClient = ({
         newData = newData.filter((x) => StockRoles.some((s) => s.value === x.groupid))
       }
 
-      return {
-        data: newData,
-        dataList:
-          data?.data?.data?.length > 0 ? data?.data?.data.map((x) => ({ ...x, value: x.id, label: x.text })) : []
-      }
+      return data?.data?.data?.length > 0 ? data?.data?.data.map((x) => ({ ...x, value: x.id, label: x.text })) : []
     },
     onSuccess: () => {}
   })
@@ -68,18 +64,18 @@ const SelectClient = ({
         className={clsx(className, errorMessageForce && 'select-control-error')}
         isMulti={isMulti}
         key={StockID}
-        isLoading={ListMembers.isLoading}
+        isLoading={isLoading}
         value={
           isMulti
-            ? ListMembers?.data?.dataList && ListMembers?.data?.dataList.length > 0
-              ? ListMembers?.data?.dataList.filter((x) => value && value.some((k) => k === x.value))
+            ? data && data.length > 0
+              ? data.filter((x) => value && value.some((k) => k === x.value))
               : null
-            : ListMembers?.data?.dataList && ListMembers?.data?.dataList.length > 0
-            ? ListMembers?.data?.dataList.filter((x) => x.value === Number(value))
+            : data && data.length > 0
+            ? data.filter((x) => x.value === Number(value))
             : null
         }
         classNamePrefix='select'
-        options={ListMembers?.data?.data || []}
+        options={data || []}
         placeholder='Chọn học viên'
         noOptionsMessage={() => 'Không có dữ liệu'}
         menuPosition='fixed'

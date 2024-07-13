@@ -12,7 +12,7 @@ import { useAuth } from 'src/app/_ezs/core/Auth'
 function PickerFilters({ children, filters, onChange, isLoading }) {
   const [visible, setVisible] = useState(false)
   let { CrStocks } = useAuth()
-  const { course_nang_cao } = useRoles(['course_nang_cao'])
+  const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
 
   const onHide = () => setVisible(false)
 
@@ -96,7 +96,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
                                 />
                               )}
@@ -154,7 +154,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
                                 />
                               )}

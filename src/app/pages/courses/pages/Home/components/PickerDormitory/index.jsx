@@ -5,76 +5,24 @@ import { ChevronDownIcon, PlusIcon, TrashIcon, XMarkIcon } from '@heroicons/reac
 import { AnimatePresence, LayoutGroup, m } from 'framer-motion'
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { Button } from 'src/app/_ezs/partials/button'
-import { Input } from 'src/app/_ezs/partials/forms'
+import { Input, InputNumber, InputTextarea } from 'src/app/_ezs/partials/forms'
 import clsx from 'clsx'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import ConfigAPI from 'src/app/_ezs/api/config.api'
 import { SpinnerComponent } from 'src/app/_ezs/components/spinner'
 import { toast } from 'react-toastify'
 
-const TagsSubs = ({ name, Title }) => {
-  const { control } = useFormContext()
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: name
-  })
-
-  return (
-    <div className='pt-3 pl-8 pr-10'>
-      {fields &&
-        fields.map((field, index) => (
-          <div className='flex mb-2 last:mb-0' key={field.id}>
-            <div className='flex-1'>
-              <Controller
-                name={`${name}[${index}].label`}
-                control={control}
-                render={({ field: { ref, ...field }, fieldState }) => (
-                  <Input
-                    placeholder='Nhập tên tag'
-                    value={field.value}
-                    onChange={field.onChange}
-                    errorMessageForce={fieldState?.invalid}
-                    errorMessage={fieldState?.error?.message}
-                  />
-                )}
-              />
-            </div>
-            <button
-              className='bg-danger hover:bg-dangerhv text-white rounded cursor-pointer px-2 transition h-[44px] w-10 mx-1.5'
-              onClick={() => remove(index)}
-            >
-              <TrashIcon className='w-6' />
-            </button>
-          </div>
-        ))}
-      <button
-        className='bg-success hover:bg-successhv transition text-white text-sm px-2 py-1 rounded'
-        type='button'
-        onClick={() => append({ label: '' })}
-      >
-        Thêm tag {Title}
-      </button>
-    </div>
-  )
-}
-
-function PickerCreateTags({ children }) {
+function PickerDormitory({ children }) {
   const [visible, setVisible] = useState(false)
 
   const onHide = () => setVisible(false)
 
   const methods = useForm({
     defaultValues: {
-      Tags: [
+      Dormitory: [
         {
-          defaultOpen: false,
           label: '',
-          children: [
-            {
-              label: ''
-            }
-          ]
+          value: ''
         }
       ]
     }
@@ -84,13 +32,13 @@ function PickerCreateTags({ children }) {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'Tags'
+    name: 'Dormitory'
   })
 
-  const SettingTagsCourse = useQuery({
-    queryKey: ['SettingTagsCourse'],
+  const SettingDormitoryCourse = useQuery({
+    queryKey: ['SettingDormitoryCourse'],
     queryFn: async () => {
-      let { data } = await ConfigAPI.getName(`daotaotag`)
+      let { data } = await ConfigAPI.getName(`daotaoktx`)
       let rs = []
       if (data?.data && data?.data?.length > 0) {
         const result = JSON.parse(data?.data[0].Value)
@@ -105,28 +53,22 @@ function PickerCreateTags({ children }) {
   })
 
   useEffect(() => {
-    if (SettingTagsCourse.data) {
-      reset({ Tags: SettingTagsCourse.data })
+    if (SettingDormitoryCourse.data) {
+      reset({ Dormitory: SettingDormitoryCourse.data })
     }
-  }, [SettingTagsCourse.data, visible])
+  }, [SettingDormitoryCourse.data, visible])
 
   const addMutation = useMutation({
     mutationFn: (data) => ConfigAPI.saveName(data)
   })
 
   const onSubmit = (values) => {
-    let body = [...(values.Tags || [])]
-    body = body
-      .map((x) => ({
-        ...x,
-        defaultOpen: false,
-        children: x.children ? x.children.filter((x) => x.label) : []
-      }))
-      .filter((x) => x.label)
+    let body = [...(values.Dormitory || [])]
+    body = body.map((x) => ({ ...x, value: x.label })).filter((x) => x.value)
     addMutation.mutate(
       {
         body,
-        name: 'daotaotag'
+        name: 'daotaoktx'
       },
       {
         onSuccess: (data) => {
@@ -168,7 +110,7 @@ function PickerCreateTags({ children }) {
                     >
                       <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
                         <Dialog.Title className='relative flex justify-between px-5 md:py-5 py-4 border-b border-light'>
-                          <div className='text-lg font-bold md:text-2xl'>Cài đặt Tags khóa học</div>
+                          <div className='text-lg font-bold md:text-2xl'>Cài đặt ký túc xá</div>
                           <div
                             className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                             onClick={onHide}
@@ -179,11 +121,11 @@ function PickerCreateTags({ children }) {
                         <div
                           className={clsx(
                             'p-5 overflow-auto grow relative',
-                            SettingTagsCourse.isLoading && 'min-h-[50%]'
+                            SettingDormitoryCourse.isLoading && 'min-h-[50%]'
                           )}
                         >
-                          <SpinnerComponent loading={SettingTagsCourse.isLoading} />
-                          {SettingTagsCourse.isLoading && <div className='h-60' />}
+                          <SpinnerComponent loading={SettingDormitoryCourse.isLoading} />
+                          {SettingDormitoryCourse.isLoading && <div className='h-60' />}
                           {!fields ||
                             (fields.length === 0 && (
                               <div>
@@ -192,59 +134,39 @@ function PickerCreateTags({ children }) {
                                   className='bg-success text-white rounded mx-1.5 text-sm px-2 py-1 cursor-pointer'
                                   onClick={() =>
                                     append({
-                                      defaultOpen: true,
-                                      label: '',
-                                      children: [
-                                        {
-                                          label: ''
-                                        }
-                                      ]
+                                      label: ''
                                     })
                                   }
                                 >
-                                  Thêm nhóm Tags
+                                  Thêm ký túc xá
                                 </span>
                                 bên dưới để thêm mới.
                               </div>
                             ))}
                           {fields &&
                             fields.map((field, index) => (
-                              <div className='mb-3.5 last:mb-0' key={field.id}>
-                                <Disclosure defaultOpen={field.defaultOpen}>
-                                  {({ open }) => (
-                                    <div>
-                                      <div className='flex'>
-                                        <div className='flex-1'>
-                                          <Controller
-                                            name={`Tags.${index}.label`}
-                                            control={control}
-                                            render={({ field: { ref, ...field }, fieldState }) => (
-                                              <Input
-                                                placeholder='Nhập tên nhóm Tags'
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                                errorMessageForce={fieldState?.invalid}
-                                                errorMessage={fieldState?.error?.message}
-                                              />
-                                            )}
-                                          />
-                                        </div>
-                                        <button
-                                          className='bg-danger hover:bg-dangerhv text-white rounded cursor-pointer px-2 transition h-[44px] w-10 mx-1.5'
-                                          onClick={() => remove(index)}
-                                        >
-                                          <TrashIcon className='w-6' />
-                                        </button>
-                                        <DisclosureButton className='flex items-center justify-center w-10 bg-[#E4E6EF] rounded'>
-                                          <ChevronDownIcon className={clsx('w-5', open && 'rotate-180')} />
-                                        </DisclosureButton>
-                                      </div>
-                                      <DisclosurePanel>
-                                        <TagsSubs Title={field.label} name={`Tags.${index}.children`} />
-                                      </DisclosurePanel>
-                                    </div>
-                                  )}
-                                </Disclosure>
+                              <div className='mb-3.5 last:mb-0 flex' key={field.id}>
+                                <div className='flex-1'>
+                                  <Controller
+                                    name={`Dormitory.${index}.label`}
+                                    control={control}
+                                    render={({ field: { ref, ...field }, fieldState }) => (
+                                      <Input
+                                        placeholder='Nhập tên ký túc xá'
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        errorMessageForce={fieldState?.invalid}
+                                        errorMessage={fieldState?.error?.message}
+                                      />
+                                    )}
+                                  />
+                                </div>
+                                <button
+                                  className='bg-danger hover:bg-dangerhv text-white rounded cursor-pointer px-2 transition h-[44px] w-10 mx-1.5'
+                                  onClick={() => remove(index)}
+                                >
+                                  <TrashIcon className='w-6' />
+                                </button>
                               </div>
                             ))}
                         </div>
@@ -265,7 +187,7 @@ function PickerCreateTags({ children }) {
                                 })
                               }
                             >
-                              <span className='hidden md:block'>Thêm nhóm Tags</span>
+                              <span className='hidden md:block'>Thêm ký túc xá</span>
                               <PlusIcon className='w-6 md:hidden' />
                             </Button>
                           </div>
@@ -300,4 +222,4 @@ function PickerCreateTags({ children }) {
   )
 }
 
-export default PickerCreateTags
+export default PickerDormitory

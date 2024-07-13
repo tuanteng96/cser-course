@@ -5,21 +5,24 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, LayoutGroup, m } from 'framer-motion'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from 'src/app/_ezs/partials/button'
-import { SelectClient } from 'src/app/_ezs/partials/select'
+import { SelectClient, SelectDormitory } from 'src/app/_ezs/partials/select'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
 import { useParams } from 'react-router-dom'
+import { useAuth } from 'src/app/_ezs/core/Auth'
 
 function PickerFilters({ children, filters, onChange, isLoading }) {
   const [visible, setVisible] = useState(false)
   let { id } = useParams()
-  const { course_nang_cao } = useRoles(['course_nang_cao'])
+  let { CrStocks } = useAuth()
+  const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
 
   let defaultValues = {
     filter: {
       MemberID: '',
       CourseID: id,
-      Status: ''
+      Status: '',
+      Places: ''
     }
   }
 
@@ -96,8 +99,28 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
+                                  StockID={CrStocks?.ID}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <div className='mb-3.5'>
+                          <div className='font-light'>Ký túc xá</div>
+                          <div className='mt-1'>
+                            <Controller
+                              name='filter.Places'
+                              control={control}
+                              render={({ field: { ref, ...field }, fieldState }) => (
+                                <SelectDormitory
+                                  isClearable
+                                  className='select-control'
+                                  value={field.value}
+                                  onChange={(val) => {
+                                    field.onChange(val)
+                                  }}
                                 />
                               )}
                             />

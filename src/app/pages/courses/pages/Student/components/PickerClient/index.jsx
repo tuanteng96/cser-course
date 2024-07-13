@@ -7,8 +7,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button } from 'src/app/_ezs/partials/button'
-import { InputTextarea } from 'src/app/_ezs/partials/forms'
-import { SelectClient, SelectOrderClient, SelectOrderItemsClient } from 'src/app/_ezs/partials/select'
+import { InputNumber, InputTextarea } from 'src/app/_ezs/partials/forms'
+import { SelectClient, SelectDormitory, SelectOrderClient, SelectOrderItemsClient } from 'src/app/_ezs/partials/select'
 import moment from 'moment'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
 import { useParams } from 'react-router-dom'
+import { useAuth } from 'src/app/_ezs/core/Auth'
 
 const schemaAddEdit = yup.object().shape({
   MemberID: yup.string().required('Vui lòng chọn học viên'),
@@ -27,12 +28,15 @@ function PickerClient({ children, data }) {
   const queryClient = useQueryClient()
   const [visible, setVisible] = useState(false)
   let { id } = useParams()
-
+  let { CrStocks } = useAuth()
   let isAddMode = Boolean(!(data?.ID > 0))
 
-  const { course_nang_cao } = useRoles(['course_nang_cao'])
+  const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
 
-  const onHide = () => setVisible(false)
+  const onHide = () => {
+    setVisible(false)
+    reset()
+  }
 
   const { control, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: {
@@ -42,7 +46,9 @@ function PickerClient({ children, data }) {
       Desc: '',
       Status: '',
       OrderID: '',
-      OrderItemID: ''
+      OrderItemID: '',
+      Places: '',
+      TotalBefore: 0
     },
     resolver: yupResolver(schemaAddEdit)
   })
@@ -51,7 +57,7 @@ function PickerClient({ children, data }) {
 
   useEffect(() => {
     if (visible && data) {
-      let { ID, MemberID, CourseID, Desc, Status, OrderID, OrderItemID } = data
+      let { ID, MemberID, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places } = data
       reset({
         ID,
         MemberID,
@@ -59,7 +65,9 @@ function PickerClient({ children, data }) {
         Desc,
         Status,
         OrderID,
-        OrderItemID
+        OrderItemID,
+        TotalBefore,
+        Places: Places ? { label: Places, value: Places } : ''
       })
     }
   }, [data, visible])
@@ -70,7 +78,8 @@ function PickerClient({ children, data }) {
 
   const onSubmit = (values) => {
     let newValues = {
-      ...values
+      ...values,
+      Places: values?.Places ? values?.Places?.value : ''
     }
 
     addMutation.mutate(
@@ -91,7 +100,7 @@ function PickerClient({ children, data }) {
     <>
       {children({
         open: () => setVisible(true),
-        close: () => setVisible(false)
+        close: onHide
       })}
       <AnimatePresence>
         {visible && (
@@ -149,10 +158,30 @@ function PickerClient({ children, data }) {
                                   StockRoles={
                                     course_nang_cao?.hasRight
                                       ? course_nang_cao?.StockRolesAll
-                                      : course_nang_cao.StockRolesAll
+                                      : course_co_ban.StockRolesAll
                                   }
                                   errorMessageForce={fieldState?.invalid}
                                   errorMessage={fieldState?.error?.message}
+                                  StockID={CrStocks?.ID}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <div className='mb-3.5'>
+                          <div className='font-light'>Ký túc xá</div>
+                          <div className='mt-1'>
+                            <Controller
+                              name='Places'
+                              control={control}
+                              render={({ field: { ref, ...field }, fieldState }) => (
+                                <SelectDormitory
+                                  isClearable
+                                  className='select-control'
+                                  value={field.value}
+                                  onChange={(val) => {
+                                    field.onChange(val)
+                                  }}
                                 />
                               )}
                             />
@@ -170,6 +199,24 @@ function PickerClient({ children, data }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => field.onChange(val?.value || '')}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <div className='mb-3.5'>
+                          <div className='font-light'>Số buổi đã học</div>
+                          <div className='mt-1'>
+                            <Controller
+                              name='TotalBefore'
+                              control={control}
+                              render={({ field: { ref, ...field }, fieldState }) => (
+                                <InputNumber
+                                  placeholder='Nhập số buổi'
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  errorMessageForce={fieldState?.invalid}
+                                  errorMessage={fieldState?.error?.message}
                                 />
                               )}
                             />
