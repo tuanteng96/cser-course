@@ -94,9 +94,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   value={field.value}
                                   onChange={(val) => field.onChange(val?.value || '')}
                                   StockRoles={
-                                    course_nang_cao?.hasRight
-                                      ? course_nang_cao?.StockRolesAll
-                                      : course_co_ban.StockRolesAll
+                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
                                   }
                                 />
                               )}
@@ -152,9 +150,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   value={field.value}
                                   onChange={(val) => field.onChange(val ? val.map((x) => x.value) : [])}
                                   StockRoles={
-                                    course_nang_cao?.hasRight
-                                      ? course_nang_cao?.StockRolesAll
-                                      : course_co_ban.StockRolesAll
+                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
                                   }
                                 />
                               )}

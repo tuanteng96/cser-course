@@ -156,9 +156,7 @@ function PickerClient({ children, data }) {
                                     }
                                   }}
                                   StockRoles={
-                                    course_nang_cao?.hasRight
-                                      ? course_nang_cao?.StockRolesAll
-                                      : course_co_ban.StockRolesAll
+                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
                                   }
                                   errorMessageForce={fieldState?.invalid}
                                   errorMessage={fieldState?.error?.message}
