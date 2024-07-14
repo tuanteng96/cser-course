@@ -206,7 +206,7 @@ function Student(props) {
                   className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px] disabled:opacity-30'
                   onClick={open}
                   disabled={
-                    !course_nang_cao.hasRight ||
+                    !course_nang_cao.hasRight &&
                     moment().format('DD-MM-YYYY') !== moment(rowData.CreateDate).format('DD-MM-YYYY')
                   }
                 >
