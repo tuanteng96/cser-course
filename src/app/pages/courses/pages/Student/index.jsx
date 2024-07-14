@@ -11,6 +11,7 @@ import { PickerFilters } from './components'
 import PickerClient from './components/PickerClient'
 import { formatString } from 'src/app/_ezs/utils/formatString'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
+import moment from 'moment'
 
 function Student(props) {
   let { id } = useParams()
@@ -32,7 +33,6 @@ function Student(props) {
 
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-
 
   const { course_nang_cao } = useRoles(['course_nang_cao'])
 
@@ -88,6 +88,19 @@ function Student(props) {
     })
   }
 
+  const getOutOfDate = (rowData) => {
+    if (rowData.Status === '2') return
+    let { Course, MinDate } = rowData
+    let { DayCount } = Course
+    if (!MinDate) return
+    let EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(DayCount), 'days').format('YYYY-MM-DD')
+
+    let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
+    if (ofDate < 0) {
+      return `Quán hạn tốt nghiệp ${ofDate} ngày`
+    }
+  }
+
   const columns = useMemo(
     () => [
       {
@@ -99,6 +112,7 @@ function Student(props) {
         cellRenderer: ({ rowData }) => (
           <div>
             <div>{rowData?.Member?.FullName}</div>
+            {!getOutOfDate(rowData) && <div className='text-danger text-[13px]'>{getOutOfDate(rowData)}</div>}
           </div>
         )
       },
@@ -169,7 +183,7 @@ function Student(props) {
         width: width > 767 ? 150 : 100,
         sortable: false,
         cellRenderer: ({ rowData }) => (
-          <div className='flex w-full justify-center'>
+          <div className='flex justify-center w-full'>
             <PickerClient data={rowData}>
               {({ open }) => (
                 <button
@@ -184,7 +198,7 @@ function Student(props) {
             {course_nang_cao.hasRight && (
               <button
                 type='button'
-                className='bg-danger hover:bg-dangerhv text-white text-sm rounded cursor-pointer p-2 transition'
+                className='p-2 text-sm text-white transition rounded cursor-pointer bg-danger hover:bg-dangerhv'
                 onClick={() => onDelete(rowData)}
               >
                 <TrashIcon className='w-5' />
@@ -200,16 +214,16 @@ function Student(props) {
   )
 
   return (
-    <div className='h-full flex flex-col'>
-      <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
+    <div className='flex flex-col h-full'>
+      <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
         <div className='flex items-center'>
           <div className='cursor-pointer' onClick={() => navigate(-1)}>
             <ArrowLeftIcon className='w-7 md:w-8' />
           </div>
-          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>
+          <div className='hidden pl-4 text-xl font-bold md:text-3xl md:block'>
             DS học viên <span className='text-base text-primary'>{searchParams.get('title')}</span>
           </div>
-          <div className='text-xl md:text-3xl font-bold pl-4 md:hidden'>
+          <div className='pl-4 text-xl font-bold md:text-3xl md:hidden'>
             DS Học viên <div className='text-sm text-primary'>{searchParams.get('title')}</div>
           </div>
         </div>

@@ -67,8 +67,8 @@ if (import.meta.env.DEV) {
                   stocks: '',
                   stocksList: [
                     {
-                      Title: "Cơ sở A",
-                      ID: 11382,
+                      Title: "Cser Hà Nội",
+                      ID: 11375,
                       ParentID: 778
                     }
                   ]
@@ -78,6 +78,13 @@ if (import.meta.env.DEV) {
                   hasRight: false,
                   name: 'course_nang_cao',
                   stocks: '',
+                  stocksList: [
+                    {
+                      Title: "Cser Hà Nội",
+                      ID: 11375,
+                      ParentID: 778
+                    }
+                  ]
                 }
               ]
             }
@@ -85,9 +92,9 @@ if (import.meta.env.DEV) {
         }
       ]
     },
-    CrStockID: 11382,
+    CrStockID: 11375,
     token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjQiLCJuYmYiOjE3MjA0OTg4NDQsImV4cCI6MTgwNjg5ODg0NCwiaWF0IjoxNzIwNDk4ODQ0fQ.vDFbW1CKj-nAlndQqA0E8JA4SPNKQTpqP66NyEIwK0k'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEzIiwibmJmIjoxNzIwNjMwMDI0LCJleHAiOjE4MDcwMzAwMjQsImlhdCI6MTcyMDYzMDAyNH0.g1vIQ1AocKoVecWOrIYJ4JhJHD8DXFt06vzKJhYUOdU'
   }
 }
 
