@@ -111,6 +111,7 @@ function Attendance(props) {
           CreateDate: [From, To]
         }
       }
+
       let { data } = await CourseAPI.studentCheck(newFilters)
 
       let arr = []
@@ -120,29 +121,30 @@ function Attendance(props) {
       }
 
       let rs = [...data?.items]
-      if (data?.items && data?.items.length > 0) {
-        let { items } = data
-        rs = [...items]
 
-        for (let client of Clients) {
-          for (let date of arr) {
-            let toCheck = items.some(
-              (x) => moment(x.CreateDate).format('YYYY-MM-DD') === date && x.MemberID === client.MemberID
-            )
-            if (!toCheck) {
-              rs.push({
-                CourseID: client.CourseID,
-                CourseMemberID: client.ID,
-                CreateDate: moment(date, 'YYYY-MM-DD').toDate(),
-                DataJSON: '',
-                Desc: '',
-                ID: 0,
-                MemberID: client.MemberID
-              })
-            }
+      let { items } = data
+      rs = [...items]
+
+      for (let client of Clients) {
+        for (let date of arr) {
+          let toCheck = items.some(
+            (x) => moment(x.CreateDate).format('YYYY-MM-DD') === date && x.MemberID === client.MemberID
+          )
+
+          if (!toCheck) {
+            rs.push({
+              CourseID: client.CourseID,
+              CourseMemberID: client.ID,
+              CreateDate: moment(date, 'YYYY-MM-DD').toDate(),
+              DataJSON: '',
+              Desc: '',
+              ID: 0,
+              MemberID: client.MemberID
+            })
           }
         }
       }
+
       return rs
         ? rs.map((x) => ({
             ...x,
@@ -171,17 +173,17 @@ function Attendance(props) {
   }
 
   return (
-    <div className='h-full flex flex-col fullcalendar-grow relative'>
-      <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
+    <div className='relative flex flex-col h-full fullcalendar-grow'>
+      <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
         <div className='flex items-center'>
           <div className='cursor-pointer' onClick={() => navigate(-1)}>
             <ArrowLeftIcon className='w-8' />
           </div>
-          <div className='text-xl md:text-3xl font-bold pl-4 hidden md:block'>
+          <div className='hidden pl-4 text-xl font-bold md:text-3xl md:block'>
             Điểm danh <span className='text-base text-primary'>{searchParams.get('title')}</span>
           </div>
           <div className='text-xl md:text-3xl font-bold pl-4 md:hidden w-[130px] pr-2'>
-            Điểm danh <div className='text-sm text-primary truncate'>{searchParams.get('title')}</div>
+            Điểm danh <div className='text-sm truncate text-primary'>{searchParams.get('title')}</div>
           </div>
         </div>
 
@@ -208,7 +210,7 @@ function Attendance(props) {
             onClick={() => {
               if (calendarRef?.current?.getApi()) {
                 let calendarApi = calendarRef.current.getApi()
-                let day = moment(filters.filter.CreateDate).subtract(6, 'days')
+                let day = moment(filters.filter.CreateDate).subtract(7, 'days').toDate()
                 calendarApi.prev()
                 setFilters((prevState) => ({
                   ...prevState,
@@ -228,7 +230,7 @@ function Attendance(props) {
             onClick={() => {
               if (calendarRef?.current?.getApi()) {
                 let calendarApi = calendarRef.current.getApi()
-                let day = moment(filters.filter.CreateDate).add(6, 'days')
+                let day = moment(filters.filter.CreateDate).add(7, 'days').toDate()
                 calendarApi.next()
                 setFilters((prevState) => ({
                   ...prevState,
@@ -368,10 +370,10 @@ function Attendance(props) {
       <ModalAttendance visible={visible} onHide={onHide} data={inititalValues} refetch={refetch} />
       {(isLoading || isLoadingClient || addEditMutation.isPending) && (
         <div className='absolute w-full h-full top-0 left-0 pt-[60.5px] z-10'>
-          <div className='w-full h-full bg-black/20 flex items-center justify-center'>
+          <div className='flex items-center justify-center w-full h-full bg-black/20'>
             <svg
               aria-hidden='true'
-              className='w-10 h-10 text-white animate-spin fill-blue-600 relative z-10'
+              className='relative z-10 w-10 h-10 text-white animate-spin fill-blue-600'
               viewBox='0 0 100 101'
               fill='none'
               xmlns='http://www.w3.org/2000/svg'

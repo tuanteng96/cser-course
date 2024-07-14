@@ -125,7 +125,7 @@ function PickerClient({ children, data }) {
                     exit={{ opacity: 0, top: '60%' }}
                   >
                     <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
-                      <Dialog.Title className='relative flex justify-between px-5 md:py-5 py-4 border-b border-light'>
+                      <Dialog.Title className='relative flex justify-between px-5 py-4 border-b md:py-5 border-light'>
                         <div className='text-lg font-bold md:text-2xl'>
                           {isAddMode ? 'Thêm mới học viên' : 'Chỉnh sửa học viên'}
                         </div>
@@ -133,7 +133,7 @@ function PickerClient({ children, data }) {
                           className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                           onClick={onHide}
                         >
-                          <XMarkIcon className='md:w-8 w-6' />
+                          <XMarkIcon className='w-6 md:w-8' />
                         </div>
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>
@@ -155,9 +155,7 @@ function PickerClient({ children, data }) {
                                       setValue('OrderID', '')
                                     }
                                   }}
-                                  StockRoles={
-                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
-                                  }
+                                  StockRoles={course_co_ban.StockRoles}
                                   errorMessageForce={fieldState?.invalid}
                                   errorMessage={fieldState?.error?.message}
                                   StockID={CrStocks?.ID}

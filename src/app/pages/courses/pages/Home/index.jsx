@@ -17,6 +17,7 @@ import { useAuth } from 'src/app/_ezs/core/Auth'
 import { Link } from 'react-router-dom'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
+import moment from 'moment'
 
 function Home(props) {
   let { CrStocks } = useAuth()
@@ -34,7 +35,7 @@ function Home(props) {
   let { width } = useWindowSize()
 
   const { course_nang_cao } = useRoles(['course_nang_cao'])
-  
+
   const { isLoading, data, refetch } = useQuery({
     queryKey: ['ListCourses', filters],
     queryFn: async () => {
@@ -107,7 +108,17 @@ function Home(props) {
         cellRenderer: ({ rowData }) => (
           <PickerCourses data={rowData}>
             {({ open }) => (
-              <span className='text-primary font-medium cursor-pointer' onClick={open}>
+              <span
+                className='font-medium cursor-pointer text-primary'
+                onClick={() => {
+                  if (
+                    course_nang_cao.hasRight ||
+                    moment().format('DD-MM-YYYY') === moment(rowData.CreateDate).format('DD-MM-YYYY')
+                  ) {
+                    open()
+                  }
+                }}
+              >
                 {rowData?.Title}
               </span>
             )}
@@ -162,10 +173,10 @@ function Home(props) {
         width: 240,
         sortable: false,
         cellRenderer: ({ rowData }) => (
-          <div className='flex w-full justify-center'>
+          <div className='flex justify-center w-full'>
             <Link
               to={`student/${rowData.ID}?title=${rowData.Title}`}
-              className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer px-3 py-2 transition'
+              className='px-3 py-2 text-sm text-white transition rounded cursor-pointer bg-primary hover:bg-primaryhv'
             >
               <UserGroupIcon className='w-5' />
             </Link>
@@ -176,21 +187,26 @@ function Home(props) {
             >
               Điểm danh
             </Link>
-            <PickerCourses data={rowData}>
-              {({ open }) => (
-                <button
-                  type='button'
-                  className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px]'
-                  onClick={open}
-                >
-                  <PencilIcon className='w-5' />
-                </button>
-              )}
-            </PickerCourses>
-            {course_nang_cao.hasRight && (
+
+            {(course_nang_cao.hasRight ||
+              moment().format('DD-MM-YYYY') === moment(rowData.CreateDate).format('DD-MM-YYYY')) && (
+              <PickerCourses data={rowData}>
+                {({ open }) => (
+                  <button
+                    type='button'
+                    className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px]'
+                    onClick={open}
+                  >
+                    <PencilIcon className='w-5' />
+                  </button>
+                )}
+              </PickerCourses>
+            )}
+            {(course_nang_cao.hasRight ||
+              moment().format('DD-MM-YYYY') === moment(rowData.CreateDate).format('DD-MM-YYYY')) && (
               <button
                 type='button'
-                className='bg-danger hover:bg-dangerhv text-white text-sm rounded cursor-pointer p-2 transition'
+                className='p-2 text-sm text-white transition rounded cursor-pointer bg-danger hover:bg-dangerhv'
                 onClick={() => onDelete(rowData)}
               >
                 <TrashIcon className='w-5' />
@@ -206,15 +222,15 @@ function Home(props) {
   )
 
   return (
-    <div className='h-full flex flex-col'>
-      <div className='flex justify-between items-center px-5 md:py-4 py-3 border-b'>
-        <div className='text-xl md:text-3xl font-bold'>Khóa đào tạo</div>
+    <div className='flex flex-col h-full'>
+      <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
+        <div className='text-xl font-bold md:text-3xl'>Khóa đào tạo</div>
         <div className='flex'>
           <Popover className='relative'>
             <PopoverButton className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-11 md:h-12 w-11 md:w-12 mr-1.5 md:mr-2.5'>
               <Cog6ToothIcon className='w-6 md:w-7' />
             </PopoverButton>
-            <PopoverPanel anchor='bottom end' className='flex flex-col bg-white shadow-lg py-2 rounded'>
+            <PopoverPanel anchor='bottom end' className='flex flex-col py-2 bg-white rounded shadow-lg'>
               <PickerCreateTags>
                 {({ open }) => (
                   <div

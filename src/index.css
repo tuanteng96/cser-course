@@ -66,6 +66,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     padding-bottom: var(--width-scroll);
 } */
 
+.fc .fc-view-harness {
+    @apply bg-white
+}
+
 .fc-datagrid-cell.fc-resource .fc-datagrid-cell-frame {
     @apply !min-h-[111px]
 }

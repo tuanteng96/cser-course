@@ -47,7 +47,18 @@ function Student(props) {
         }
       }
       let { data } = await CourseAPI.listStudentCourse(newFilters)
+
       return data
+        ? {
+            ...data,
+            items: data?.items
+              ? data?.items.map((x) => ({
+                  ...x,
+                  OutOfDate: getOutOfDate(x)
+                }))
+              : []
+          }
+        : null
     }
   })
 
@@ -89,15 +100,18 @@ function Student(props) {
   }
 
   const getOutOfDate = (rowData) => {
-    if (rowData.Status === '2') return
+    if (rowData.Status === '1') return
     let { Course, MinDate } = rowData
     let { DayCount } = Course
+
     if (!MinDate) return
+
     let EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(DayCount), 'days').format('YYYY-MM-DD')
 
     let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
+
     if (ofDate < 0) {
-      return `Quán hạn tốt nghiệp ${ofDate} ngày`
+      return `Quán hạn tốt nghiệp ${Math.abs(ofDate)} ngày`
     }
   }
 
@@ -112,7 +126,7 @@ function Student(props) {
         cellRenderer: ({ rowData }) => (
           <div>
             <div>{rowData?.Member?.FullName}</div>
-            {!getOutOfDate(rowData) && <div className='text-danger text-[13px]'>{getOutOfDate(rowData)}</div>}
+            {rowData.OutOfDate && <div className='text-danger text-[13px]'>{rowData.OutOfDate}</div>}
           </div>
         )
       },
@@ -145,7 +159,8 @@ function Student(props) {
         dataKey: 'Total',
         width: width > 767 ? 160 : 120,
         sortable: false,
-        cellRenderer: ({ rowData }) => `${rowData?.TotalCheck}/${rowData?.Course?.Total}`
+        cellRenderer: ({ rowData }) =>
+          `${rowData?.TotalCheck + Number(rowData?.TotalBefore || 0)}/${rowData?.Course?.Total}`
       },
       {
         key: 'Order.RemainPay',
@@ -153,7 +168,7 @@ function Student(props) {
         dataKey: 'Order.RemainPay',
         width: width > 767 ? 220 : 150,
         sortable: false,
-        cellRenderer: ({ rowData }) => formatString.formatVND(rowData?.Order?.RemainPay)
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.Order?.RemainPay)
       },
       {
         key: 'Status',
@@ -188,14 +203,20 @@ function Student(props) {
               {({ open }) => (
                 <button
                   type='button'
-                  className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px]'
+                  className='bg-primary hover:bg-primaryhv text-white text-sm rounded cursor-pointer p-2 transition mr-[4px] disabled:opacity-30'
                   onClick={open}
+                  disabled={
+                    !course_nang_cao.hasRight ||
+                    moment().format('DD-MM-YYYY') !== moment(rowData.CreateDate).format('DD-MM-YYYY')
+                  }
                 >
                   <PencilIcon className='w-5' />
                 </button>
               )}
             </PickerClient>
-            {course_nang_cao.hasRight && (
+
+            {(course_nang_cao.hasRight ||
+              moment().format('DD-MM-YYYY') === moment(rowData.CreateDate).format('DD-MM-YYYY')) && (
               <button
                 type='button'
                 className='p-2 text-sm text-white transition rounded cursor-pointer bg-danger hover:bg-dangerhv'

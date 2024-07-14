@@ -28,7 +28,7 @@ function PickerCourses({ children, data }) {
 
   let { CrStocks } = useAuth()
   const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
-  
+
   const onHide = () => {
     setVisible(false)
     reset()
@@ -117,7 +117,7 @@ function PickerCourses({ children, data }) {
                     exit={{ opacity: 0, top: '60%' }}
                   >
                     <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
-                      <Dialog.Title className='relative flex justify-between px-5 py-4 md:py-5 border-b border-light'>
+                      <Dialog.Title className='relative flex justify-between px-5 py-4 border-b md:py-5 border-light'>
                         <div className='text-lg font-bold md:text-2xl'>
                           {isAddMode ? 'Thêm mới khóa học' : 'Chỉnh sửa khóa học'}
                         </div>
@@ -125,7 +125,7 @@ function PickerCourses({ children, data }) {
                           className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                           onClick={onHide}
                         >
-                          <XMarkIcon className='md:w-8 w-6' />
+                          <XMarkIcon className='w-6 md:w-8' />
                         </div>
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>
@@ -159,9 +159,7 @@ function PickerCourses({ children, data }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => field.onChange(val?.value || '')}
-                                  StockRoles={
-                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
-                                  }
+                                  StockRoles={course_co_ban.StockRoles}
                                 />
                               )}
                             />
@@ -233,9 +231,7 @@ function PickerCourses({ children, data }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => field.onChange(val ? val.map((x) => x.value) : [])}
-                                  StockRoles={
-                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
-                                  }
+                                  StockRoles={course_co_ban.StockRoles}
                                 />
                               )}
                             />

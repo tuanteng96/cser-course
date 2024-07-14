@@ -74,13 +74,13 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                     exit={{ opacity: 0, top: '60%' }}
                   >
                     <Dialog.Panel tabIndex={0} className='flex flex-col w-full max-h-full bg-white rounded shadow-lg'>
-                      <Dialog.Title className='relative flex justify-between px-5 md:py-5 py-4 border-b border-light'>
+                      <Dialog.Title className='relative flex justify-between px-5 py-4 border-b md:py-5 border-light'>
                         <div className='text-lg font-bold md:text-2xl'>Bộ lọc</div>
                         <div
                           className='absolute flex items-center justify-center w-12 h-12 cursor-pointer right-2 top-2/4 -translate-y-2/4'
                           onClick={onHide}
                         >
-                          <XMarkIcon className='md:w-8 w-6' />
+                          <XMarkIcon className='w-6 md:w-8' />
                         </div>
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>
@@ -96,9 +96,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => field.onChange(val?.value || '')}
-                                  StockRoles={
-                                    course_nang_cao?.hasRight ? course_nang_cao?.StockRoles : course_co_ban.StockRoles
-                                  }
+                                  StockRoles={course_co_ban.StockRoles}
                                   StockID={CrStocks?.ID}
                                 />
                               )}
@@ -146,7 +144,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                         <div>
                           <button
                             type='button'
-                            className='relative flex items-center h-12 px-5 transition border rounded shadow-lg border-light hover:border-gray-800 focus:outline-none focus:shadow-none font-medium'
+                            className='relative flex items-center h-12 px-5 font-medium transition border rounded shadow-lg border-light hover:border-gray-800 focus:outline-none focus:shadow-none'
                             onClick={onReset}
                           >
                             Reset
