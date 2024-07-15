@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, LayoutGroup, m } from 'framer-motion'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from 'src/app/_ezs/partials/button'
-import { SelectClient, SelectDormitory } from 'src/app/_ezs/partials/select'
+import { SelectClient, SelectDormitory, SelectStatusPay } from 'src/app/_ezs/partials/select'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
 import { useParams } from 'react-router-dom'
@@ -22,7 +22,8 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
       MemberID: '',
       CourseID: id,
       Status: '',
-      Places: ''
+      Places: '',
+      no: ''
     }
   }
 
@@ -95,7 +96,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   isClearable
                                   className='select-control'
                                   value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
+                                  onChange={(val) => field.onChange(val)}
                                   StockRoles={course_co_ban.StockRoles}
                                   StockID={CrStocks?.ID}
                                 />
@@ -122,7 +123,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                             />
                           </div>
                         </div>
-                        <div>
+                        <div className='mb-3.5'>
                           <div className='font-light'>Trạng thái</div>
                           <div className='mt-1'>
                             <Controller
@@ -130,6 +131,23 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
                                 <SelectStatusStudent
+                                  isClearable
+                                  className='select-control'
+                                  value={field.value}
+                                  onChange={(val) => field.onChange(val?.value || '')}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className='font-light'>Trạng thái thanh toán</div>
+                          <div className='mt-1'>
+                            <Controller
+                              name='filter.no'
+                              control={control}
+                              render={({ field: { ref, ...field }, fieldState }) => (
+                                <SelectStatusPay
                                   isClearable
                                   className='select-control'
                                   value={field.value}

@@ -22,7 +22,8 @@ function Student(props) {
       MemberID: '',
       CourseID: id,
       Status: '',
-      Places: ''
+      Places: '',
+      no: ''
     },
     order: {
       CreateDate: 'desc'
@@ -43,7 +44,7 @@ function Student(props) {
         ...filters,
         filter: {
           ...filters.filter,
-          Places: filters.filter?.Places ? filters.filter?.Places?.value : ''
+          Places: filters.filter?.Places ? filters.filter?.Places?.value : '',
         }
       }
       let { data } = await CourseAPI.listStudentCourse(newFilters)
@@ -168,7 +169,7 @@ function Student(props) {
         dataKey: 'Order.RemainPay',
         width: width > 767 ? 220 : 150,
         sortable: false,
-        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.Order?.RemainPay)
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.RemainPay)
       },
       {
         key: 'Status',
@@ -233,7 +234,7 @@ function Student(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [width]
   )
-
+  
   return (
     <div className='flex flex-col h-full'>
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
@@ -253,7 +254,15 @@ function Student(props) {
           <PickerFilters
             isLoading={isLoading}
             filters={filters}
-            onChange={(values) => setFilters((prevState) => ({ ...prevState, filter: values.filter }))}
+            onChange={(values) =>
+              setFilters((prevState) => ({
+                ...prevState,
+                filter: {
+                  ...values.filter,
+                  MemberID: values.filter?.MemberID ? values.filter?.MemberID?.value : '',
+                }
+              }))
+            }
           >
             {({ open }) => (
               <button

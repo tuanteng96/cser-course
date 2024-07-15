@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom'
 import { useAuth } from 'src/app/_ezs/core/Auth'
 
 const schemaAddEdit = yup.object().shape({
-  MemberID: yup.string().required('Vui lòng chọn học viên'),
+  MemberID: yup.object().required('Vui lòng chọn học viên'),
   OrderID: yup.string().required('Vui lòng chọn đơn hàng'),
   OrderItemID: yup.string().required('Vui lòng chọn đơn hàng')
 })
@@ -38,7 +38,7 @@ function PickerClient({ children, data }) {
     reset()
   }
 
-  const { control, handleSubmit, reset, watch, setValue } = useForm({
+  const { control, handleSubmit, reset, watch, setValue, setError } = useForm({
     defaultValues: {
       ID: 0,
       MemberID: '',
@@ -57,10 +57,11 @@ function PickerClient({ children, data }) {
 
   useEffect(() => {
     if (visible && data) {
-      let { ID, MemberID, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places } = data
+      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places } = data
+
       reset({
         ID,
-        MemberID,
+        MemberID: Member ? { label: Member?.FullName, value: Member.ID } : null,
         CourseID,
         Desc,
         Status,
@@ -79,18 +80,27 @@ function PickerClient({ children, data }) {
   const onSubmit = (values) => {
     let newValues = {
       ...values,
-      Places: values?.Places ? values?.Places?.value : ''
+      Places: values?.Places ? values?.Places?.value : '',
+      MemberID: values?.MemberID ? values?.MemberID?.value : ''
     }
 
     addMutation.mutate(
       { edit: [newValues] },
       {
-        onSuccess: (data) => {
-          queryClient.invalidateQueries({ queryKey: ['ListStudentCourses'] }).then(() => {
-            reset()
-            toast.success(isAddMode ? 'Thêm mới thành công.' : 'Cập nhập thành công.')
-            onHide()
-          })
+        onSuccess: ({ data }) => {
+          if (data.lst && data.lst.length > 0) {
+            queryClient.invalidateQueries({ queryKey: ['ListStudentCourses'] }).then(() => {
+              reset()
+              toast.success(isAddMode ? 'Thêm mới thành công.' : 'Cập nhập thành công.')
+              onHide()
+            })
+          }
+          else {
+            setError('MemberID', {
+              type: 'Server',
+              message: 'Học viên đã tồn tại.'
+            })
+          }
         }
       }
     )
@@ -149,7 +159,7 @@ function PickerClient({ children, data }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => {
-                                    field.onChange(val?.value || '')
+                                    field.onChange(val)
                                     if (!val?.value) {
                                       setValue('OrderItemID', '')
                                       setValue('OrderID', '')
@@ -226,8 +236,8 @@ function PickerClient({ children, data }) {
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
                                 <SelectOrderClient
-                                  MemberID={MemberID}
-                                  key={MemberID}
+                                  MemberID={MemberID?.value || ''}
+                                  key={MemberID?.value || ''}
                                   isClearable
                                   className='select-control'
                                   value={field.value}
@@ -250,7 +260,7 @@ function PickerClient({ children, data }) {
                               render={({ field: { ref, ...field }, fieldState }) => (
                                 <SelectOrderItemsClient
                                   OrderID={OrderID}
-                                  MemberID={MemberID}
+                                  MemberID={MemberID?.value || ''}
                                   key={MemberID || OrderID}
                                   isClearable
                                   className='select-control'

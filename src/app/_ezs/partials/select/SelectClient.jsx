@@ -1,24 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/async'
 import ClientsAPI from '../../api/clients.api'
 import clsx from 'clsx'
 
-const SelectClient = ({
-  value,
-  StockID = 0,
-  isMulti,
-  StockRoles,
-  errorMessage,
-  errorMessageForce,
-  className,
-  ...props
-}) => {
-  const { data, isLoading } = useQuery({
-    queryKey: ['ListMemberSelect'],
-    queryFn: async () => {
+const SelectClient = ({ StockID = 0, StockRoles, errorMessage, errorMessageForce, className, ...props }) => {
+
+  const promiseOptions = (inputValue) =>
+    new Promise(async (resolve) => {
       const data = await ClientsAPI.listSelect({
-        Key: '',
+        Key: inputValue,
         StockID: StockID || 0
       })
 
@@ -53,29 +43,18 @@ const SelectClient = ({
         newData = newData.filter((x) => StockRoles.some((s) => s.value === x.groupid))
       }
 
-      return data?.data?.data?.length > 0 ? data?.data?.data.map((x) => ({ ...x, value: x.id, label: x.text })) : []
-    },
-    onSuccess: () => {}
-  })
+      resolve(data?.data?.data?.length > 0 ? data?.data?.data.map((x) => ({ ...x, value: x.id, label: x.text })) : [])
+    })
 
   return (
     <>
-      <Select
+      <AsyncSelect
+        cacheOptions
+        defaultOptions
         className={clsx(className, errorMessageForce && 'select-control-error')}
-        isMulti={isMulti}
         key={StockID}
-        isLoading={isLoading}
-        value={
-          isMulti
-            ? data && data.length > 0
-              ? data.filter((x) => value && value.some((k) => k === x.value))
-              : null
-            : data && data.length > 0
-            ? data.filter((x) => x.value === Number(value))
-            : null
-        }
         classNamePrefix='select'
-        options={data || []}
+        loadOptions={promiseOptions}
         placeholder='Chọn học viên'
         noOptionsMessage={() => 'Không có dữ liệu'}
         menuPosition='fixed'

@@ -192,15 +192,19 @@ function Attendance(props) {
             popperPlacement='top-end'
             placeholderText='Chọn ngày'
             autoComplete='off'
-            onChange={(e) =>
-              setFilters((prevState) => ({
-                ...prevState,
-                filter: {
-                  ...prevState.filter,
-                  CreateDate: e
-                }
-              }))
-            }
+            onChange={(e) => {
+              if (calendarRef?.current?.getApi()) {
+                let calendarApi = calendarRef.current.getApi()
+                calendarApi.gotoDate(e)
+                setFilters((prevState) => ({
+                  ...prevState,
+                  filter: {
+                    ...prevState.filter,
+                    CreateDate: e
+                  }
+                }))
+              }
+            }}
             selected={filters.filter.CreateDate ? new Date(filters.filter.CreateDate) : null}
             dateFormat='dd/MM/yyyy'
           />
