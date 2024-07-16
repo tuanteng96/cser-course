@@ -100,21 +100,7 @@ function Student(props) {
     })
   }
 
-  const getOutOfDate = (rowData) => {
-    if (rowData.Status === '1') return
-    let { Course, MinDate } = rowData
-    let { DayCount } = Course
-
-    if (!MinDate) return
-
-    let EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(DayCount), 'days').format('YYYY-MM-DD')
-
-    let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
-
-    if (ofDate < 0) {
-      return `Quán hạn tốt nghiệp ${Math.abs(ofDate)} ngày`
-    }
-  }
+  
 
   const columns = useMemo(
     () => [
@@ -153,6 +139,14 @@ function Student(props) {
         width: width > 767 ? 300 : 200,
         sortable: false,
         cellRenderer: ({ rowData }) => rowData?.Member?.HomeAddress
+      },
+      {
+        key: 'OrderItem.ToPay',
+        title: 'Giá trị khoá học',
+        dataKey: 'OrderItem.ToPay',
+        width: width > 767 ? 250 : 200,
+        sortable: false,
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.OrderItem?.ToPay)
       },
       {
         key: 'Total',
