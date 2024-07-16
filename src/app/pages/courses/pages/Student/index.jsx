@@ -13,6 +13,22 @@ import { formatString } from 'src/app/_ezs/utils/formatString'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 import moment from 'moment'
 
+const getOutOfDate = (rowData) => {
+  if (rowData.Status === '1') return
+  let { Course, MinDate } = rowData
+  let { DayCount } = Course
+
+  if (!MinDate) return
+
+  let EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(DayCount), 'days').format('YYYY-MM-DD')
+
+  let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
+
+  if (ofDate < 0) {
+    return `Quán hạn tốt nghiệp ${Math.abs(ofDate)} ngày`
+  }
+}
+
 function Student(props) {
   let { id } = useParams()
   const [filters, setFilters] = useState({
@@ -44,7 +60,7 @@ function Student(props) {
         ...filters,
         filter: {
           ...filters.filter,
-          Places: filters.filter?.Places ? filters.filter?.Places?.value : '',
+          Places: filters.filter?.Places ? filters.filter?.Places?.value : ''
         }
       }
       let { data } = await CourseAPI.listStudentCourse(newFilters)
@@ -99,8 +115,6 @@ function Student(props) {
       }
     })
   }
-
-  
 
   const columns = useMemo(
     () => [
@@ -228,7 +242,7 @@ function Student(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [width]
   )
-  
+
   return (
     <div className='flex flex-col h-full'>
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
@@ -253,7 +267,7 @@ function Student(props) {
                 ...prevState,
                 filter: {
                   ...values.filter,
-                  MemberID: values.filter?.MemberID ? values.filter?.MemberID?.value : '',
+                  MemberID: values.filter?.MemberID ? values.filter?.MemberID?.value : ''
                 }
               }))
             }
