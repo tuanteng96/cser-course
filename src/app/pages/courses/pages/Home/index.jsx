@@ -43,7 +43,7 @@ function Home(props) {
         ...filters,
         filter: {
           ...filters.filter,
-          Tags: filters.filter.Tags ? filters.filter.Tags.map((x) => x.value).toString() : '',
+          Tags: filters.filter.Tags ? ',' + filters.filter.Tags.map((x) => x.value).toString() : '',
           Teachers: filters.filter.Teachers ? filters.filter.Teachers.toString() : ''
         }
       }

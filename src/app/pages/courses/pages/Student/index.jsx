@@ -139,6 +139,16 @@ function Student(props) {
         sortable: false
       },
       {
+        key: 'Member.BirthDate',
+        title: 'Ngày sinh',
+        dataKey: 'Member.BirthDate',
+        width: width > 767 ? 220 : 140,
+        sortable: false,
+        cellRenderer: ({ rowData }) =>
+          rowData?.Member?.BirthDate ? moment(rowData.Member.BirthDate).format('DD-MM-YYYY') : <></>
+      },
+
+      {
         key: 'Places',
         title: 'Ký túc xá',
         dataKey: 'Places',
@@ -251,10 +261,16 @@ function Student(props) {
             <ArrowLeftIcon className='w-7 md:w-8' />
           </div>
           <div className='hidden pl-4 text-xl font-bold md:text-3xl md:block'>
-            DS học viên <span className='text-base text-primary'>{searchParams.get('title')}</span>
+            DS học viên
+            <span className='text-base text-primary pl-1'>
+              {searchParams.get('title')} ({data?.total || 0} bạn)
+            </span>
           </div>
           <div className='pl-4 text-xl font-bold md:text-3xl md:hidden'>
-            DS Học viên <div className='text-sm text-primary'>{searchParams.get('title')}</div>
+            DS Học viên
+            <div className='text-sm text-primary'>
+              {searchParams.get('title')} ({data?.total || 0} bạn)
+            </div>
           </div>
         </div>
 
