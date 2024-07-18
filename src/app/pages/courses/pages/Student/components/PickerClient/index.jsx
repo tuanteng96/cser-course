@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button } from 'src/app/_ezs/partials/button'
-import { InputNumber, InputTextarea } from 'src/app/_ezs/partials/forms'
+import { InputDatePicker, InputNumber, InputTextarea } from 'src/app/_ezs/partials/forms'
 import { SelectClient, SelectDormitory, SelectOrderClient, SelectOrderItemsClient } from 'src/app/_ezs/partials/select'
 import moment from 'moment'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -17,6 +17,7 @@ import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'src/app/_ezs/core/Auth'
+import { formatString } from 'src/app/_ezs/utils/formatString'
 
 const schemaAddEdit = yup.object().shape({
   MemberID: yup.object().required('Vui lòng chọn học viên'),
@@ -31,7 +32,7 @@ function PickerClient({ children, data }) {
   let { CrStocks } = useAuth()
   let isAddMode = Boolean(!(data?.ID > 0))
 
-  const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
+  const { course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
 
   const onHide = () => {
     setVisible(false)
@@ -48,17 +49,19 @@ function PickerClient({ children, data }) {
       OrderID: '',
       OrderItemID: '',
       Places: '',
-      TotalBefore: 0
+      TotalBefore: 0,
+      RemainPay: 0,
+      DayToPay: ''
     },
     resolver: yupResolver(schemaAddEdit)
   })
 
-  let { MemberID, OrderID } = watch()
+  let { MemberID, OrderID, RemainPay } = watch()
 
   useEffect(() => {
     if (visible && data) {
-      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places } = data
-
+      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places, RemainPay, DayToPay } = data
+      
       reset({
         ID,
         MemberID: Member ? { label: Member?.FullName, value: Member.ID } : null,
@@ -68,7 +71,9 @@ function PickerClient({ children, data }) {
         OrderID,
         OrderItemID,
         TotalBefore,
-        Places: Places ? { label: Places, value: Places } : ''
+        Places: Places ? { label: Places, value: Places } : '',
+        RemainPay,
+        DayToPay
       })
     }
   }, [data, visible])
@@ -78,11 +83,14 @@ function PickerClient({ children, data }) {
   })
 
   const onSubmit = (values) => {
+    
     let newValues = {
       ...values,
       Places: values?.Places ? values?.Places?.value : '',
-      MemberID: values?.MemberID ? values?.MemberID?.value : ''
+      MemberID: values?.MemberID ? values?.MemberID?.value : '',
+      DayToPay: values?.DayToPay ? moment(values?.DayToPay).format('YYYY-MM-DD') : ''
     }
+    delete newValues.RemainPay
 
     addMutation.mutate(
       { edit: [newValues] },
@@ -94,8 +102,7 @@ function PickerClient({ children, data }) {
               toast.success(isAddMode ? 'Thêm mới thành công.' : 'Cập nhập thành công.')
               onHide()
             })
-          }
-          else {
+          } else {
             setError('MemberID', {
               type: 'Server',
               message: 'Học viên đã tồn tại.'
@@ -163,6 +170,7 @@ function PickerClient({ children, data }) {
                                     if (!val?.value) {
                                       setValue('OrderItemID', '')
                                       setValue('OrderID', '')
+                                      setValue('RemainPay', 0)
                                     }
                                   }}
                                   StockRoles={course_co_ban.StockRoles}
@@ -245,6 +253,7 @@ function PickerClient({ children, data }) {
                                     field.onChange(val?.value || '')
                                     if (!val?.value) {
                                       setValue('OrderItemID', '')
+                                      setValue('RemainPay', 0)
                                     }
                                   }}
                                   errorMessageForce={fieldState?.invalid}
@@ -265,13 +274,47 @@ function PickerClient({ children, data }) {
                                   isClearable
                                   className='select-control'
                                   value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
+                                  onChange={(val) => {
+                                    field.onChange(val?.value || '')
+                                    if (!val?.value) {
+                                      setValue('RemainPay', 0)
+                                    } else {
+                                      setValue('RemainPay', val?.RemainPay)
+                                    }
+                                  }}
                                   errorMessageForce={fieldState?.invalid}
                                 />
                               )}
                             />
                           </div>
                         </div>
+                        {RemainPay > 0 && (
+                          <div className='mb-3.5'>
+                            <div className='font-light'>
+                              Ngày dự kiến thu nợ (Còn nợ :
+                              <span className='text-danger font-medium pl-1.5'>
+                                {formatString.formatVNDPositive(RemainPay)}
+                              </span>
+                              )
+                            </div>
+                            <div className='mt-1'>
+                              <Controller
+                                name='DayToPay'
+                                control={control}
+                                render={({ field: { ref, ...field }, fieldState }) => (
+                                  <InputDatePicker
+                                    //popperPlacement='top-start'
+                                    placeholderText='Chọn ngày'
+                                    autoComplete='off'
+                                    onChange={field.onChange}
+                                    selected={field.value ? new Date(field.value) : null}
+                                    dateFormat='dd/MM/yyyy'
+                                  />
+                                )}
+                              />
+                            </div>
+                          </div>
+                        )}
                         <div>
                           <div className='font-light'>Ghi chú</div>
                           <div className='mt-1'>

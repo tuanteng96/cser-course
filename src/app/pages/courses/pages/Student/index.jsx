@@ -190,6 +190,15 @@ function Student(props) {
         cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.RemainPay)
       },
       {
+        key: 'DayToPay',
+        title: 'Ngày dự kiến thu nợ',
+        dataKey: 'DayToPay',
+        width: width > 767 ? 180 : 180,
+        sortable: false,
+        cellRenderer: ({ rowData }) =>
+          rowData?.DayToPay && rowData?.RemainPay ? moment(rowData?.DayToPay).format('DD-MM-YYYY') : ''
+      },
+      {
         key: 'Status',
         title: 'Trạng thái',
         dataKey: 'Status',

@@ -75,7 +75,7 @@ if (import.meta.env.DEV) {
                 },
                 {
                   IsAllStock: false,
-                  hasRight: false,
+                  hasRight: true,
                   name: 'course_nang_cao',
                   stocks: '',
                   stocksList: [
