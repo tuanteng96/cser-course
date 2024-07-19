@@ -129,7 +129,8 @@ function Student(props) {
             <div>{rowData?.Member?.FullName}</div>
             {rowData.OutOfDate && <div className='text-danger text-[13px]'>{rowData.OutOfDate}</div>}
           </div>
-        )
+        ),
+        frozen: width > 767 ? 'left' : false
       },
       {
         key: 'Member.MobilePhone',
