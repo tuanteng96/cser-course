@@ -209,6 +209,7 @@ function Student(props) {
           <>
             {Number(rowData?.Status) === 1 && 'Đã tốt nghiệp'}
             {Number(rowData?.Status) === 2 && 'Chưa tốt nghiệp'}
+            {Number(rowData?.Status) === 4 && 'Chờ tốt nghiệp'}
             {Number(rowData?.Status) === 3 && 'Đang tạm dừng'}
           </>
         )
