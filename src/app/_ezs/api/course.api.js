@@ -9,7 +9,8 @@ const CourseAPI = {
   deleteStudentCourse: (body) => http.post(`/api/v3/course@deleteMember`, JSON.stringify(body)),
   studentCheck: (body) => http.post('/api/v3/course@listCheck', JSON.stringify(body)),
   studentEditCheck: (body) => http.post('/api/v3/course@EditCheck', JSON.stringify(body)),
-  studentDeleteCheck: (body) => http.post('/api/v3/course@deleteCheck', JSON.stringify(body))
+  studentDeleteCheck: (body) => http.post('/api/v3/course@deleteCheck', JSON.stringify(body)),
+  studentPendingList: (body) => http.post('/api/v3/course@StockMemberUnSet', JSON.stringify(body)),
 }
 
 export default CourseAPI

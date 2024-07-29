@@ -6,7 +6,8 @@ import {
   Cog6ToothIcon,
   PencilIcon,
   TrashIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  UserPlusIcon
 } from '@heroicons/react/24/outline'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
@@ -14,7 +15,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
 import { useAuth } from 'src/app/_ezs/core/Auth'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import moment from 'moment'
@@ -226,6 +227,9 @@ function Home(props) {
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
         <div className='text-xl font-bold md:text-3xl'>Khóa đào tạo</div>
         <div className='flex'>
+          <NavLink className="flex items-center justify-center mr-2 text-white border rounded bg-success h-11 md:h-12 w-11 md:w-12" to='/courses/student-pending'>
+            <UserPlusIcon className='w-6 md:w-7' />
+          </NavLink>
           <Popover className='relative'>
             <PopoverButton className='flex items-center justify-center text-gray-900 bg-light border rounded border-light h-11 md:h-12 w-11 md:w-12 mr-1.5 md:mr-2.5'>
               <Cog6ToothIcon className='w-6 md:w-7' />

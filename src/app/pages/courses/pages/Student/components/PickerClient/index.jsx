@@ -8,7 +8,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Button } from 'src/app/_ezs/partials/button'
 import { InputDatePicker, InputNumber, InputTextarea } from 'src/app/_ezs/partials/forms'
-import { SelectClient, SelectDormitory, SelectOrderClient, SelectOrderItemsClient } from 'src/app/_ezs/partials/select'
+import {
+  SelectClient,
+  SelectDormitory,
+  SelectOrderClient,
+  SelectOrderItemsClient,
+  SelectTags
+} from 'src/app/_ezs/partials/select'
 import moment from 'moment'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import CourseAPI from 'src/app/_ezs/api/course.api'
@@ -51,7 +57,8 @@ function PickerClient({ children, data }) {
       Places: '',
       TotalBefore: 0,
       RemainPay: 0,
-      DayToPay: ''
+      DayToPay: '',
+      Tags: ''
     },
     resolver: yupResolver(schemaAddEdit)
   })
@@ -60,8 +67,9 @@ function PickerClient({ children, data }) {
 
   useEffect(() => {
     if (visible && data) {
-      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places, RemainPay, DayToPay } = data
-      
+      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places, RemainPay, DayToPay, Tags } =
+        data
+
       reset({
         ID,
         MemberID: Member ? { label: Member?.FullName, value: Member.ID } : null,
@@ -69,11 +77,12 @@ function PickerClient({ children, data }) {
         Desc,
         Status,
         OrderID,
-        OrderItemID,
+        OrderItemID: OrderItemID + "-" + OrderID,
         TotalBefore,
         Places: Places ? { label: Places, value: Places } : '',
         RemainPay,
-        DayToPay
+        DayToPay,
+        Tags: Tags ? Tags.split(',').map((x) => ({ label: x, value: x })) : ''
       })
     }
   }, [data, visible])
@@ -83,15 +92,15 @@ function PickerClient({ children, data }) {
   })
 
   const onSubmit = (values) => {
-    
     let newValues = {
       ...values,
       Places: values?.Places ? values?.Places?.value : '',
       MemberID: values?.MemberID ? values?.MemberID?.value : '',
-      DayToPay: values?.DayToPay ? moment(values?.DayToPay).format('YYYY-MM-DD') : ''
+      Tags: values?.Tags ? values?.Tags.map(x => x.value).join(',') : '',
+      DayToPay: values?.DayToPay ? moment(values?.DayToPay).format('YYYY-MM-DD') : '',
+      OrderItemID: values?.OrderItemID ? values?.OrderItemID.split("-")[0] : ''
     }
     delete newValues.RemainPay
-
     addMutation.mutate(
       { edit: [newValues] },
       {
@@ -219,6 +228,24 @@ function PickerClient({ children, data }) {
                           </div>
                         </div>
                         <div className='mb-3.5'>
+                          <div className='font-light'>Tags</div>
+                          <div className='mt-1'>
+                            <Controller
+                              name='Tags'
+                              control={control}
+                              render={({ field: { ref, ...field }, fieldState }) => (
+                                <SelectTags
+                                  isMulti
+                                  isClearable
+                                  className='select-control'
+                                  value={field.value}
+                                  onChange={(val) => field.onChange(val)}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <div className='mb-3.5'>
                           <div className='font-light'>Số buổi đã học</div>
                           <div className='mt-1'>
                             <Controller
@@ -240,7 +267,7 @@ function PickerClient({ children, data }) {
                           <div className='font-light'>Đơn hàng</div>
                           <div className='mt-1'>
                             <Controller
-                              name='OrderID'
+                              name='OrderItemID'
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
                                 <SelectOrderClient
@@ -250,10 +277,13 @@ function PickerClient({ children, data }) {
                                   className='select-control'
                                   value={field.value}
                                   onChange={(val) => {
-                                    field.onChange(val?.value || '')
+                                    field.onChange(val ? val?.ID + '-' + val?.OrderID : '')
                                     if (!val?.value) {
-                                      setValue('OrderItemID', '')
+                                      setValue('OrderID', '')
                                       setValue('RemainPay', 0)
+                                    } else {
+                                      setValue('OrderID', val?.OrderID)
+                                      setValue('RemainPay', val?.RemainPay)
                                     }
                                   }}
                                   errorMessageForce={fieldState?.invalid}
@@ -262,7 +292,7 @@ function PickerClient({ children, data }) {
                               )}
                             />
                           </div>
-                          <div className='mt-2'>
+                          {/* <div className='mt-2'>
                             <Controller
                               name='OrderItemID'
                               control={control}
@@ -286,7 +316,7 @@ function PickerClient({ children, data }) {
                                 />
                               )}
                             />
-                          </div>
+                          </div> */}
                         </div>
                         {RemainPay > 0 && (
                           <div className='mb-3.5'>

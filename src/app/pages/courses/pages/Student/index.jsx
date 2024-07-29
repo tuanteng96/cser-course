@@ -39,6 +39,7 @@ function Student(props) {
       CourseID: id,
       Status: '',
       Places: '',
+      Tags: '',
       no: ''
     },
     order: {
@@ -166,6 +167,13 @@ function Student(props) {
         cellRenderer: ({ rowData }) => rowData?.Member?.HomeAddress
       },
       {
+        key: 'Tags',
+        title: 'Tags',
+        dataKey: 'Tags',
+        width: width > 767 ? 250 : 180,
+        sortable: false,
+      },
+      {
         key: 'OrderItem.ToPay',
         title: 'Giá trị khoá học',
         dataKey: 'OrderItem.ToPay',
@@ -273,7 +281,7 @@ function Student(props) {
           </div>
           <div className='hidden pl-4 text-xl font-bold md:text-3xl md:block'>
             DS học viên
-            <span className='text-base text-primary pl-1'>
+            <span className='pl-1 text-base text-primary'>
               {searchParams.get('title')} ({data?.total || 0} bạn)
             </span>
           </div>
@@ -289,15 +297,16 @@ function Student(props) {
           <PickerFilters
             isLoading={isLoading}
             filters={filters}
-            onChange={(values) =>
+            onChange={(values) => {
               setFilters((prevState) => ({
                 ...prevState,
                 filter: {
                   ...values.filter,
-                  MemberID: values.filter?.MemberID ? values.filter?.MemberID?.value : ''
+                  MemberID: values.filter?.MemberID ? values.filter?.MemberID?.value : '',
+                  Tags: values.filter?.Tags ? values.filter?.Tags.map((x) => x.value).join(',') : ''
                 }
               }))
-            }
+            }}
           >
             {({ open }) => (
               <button

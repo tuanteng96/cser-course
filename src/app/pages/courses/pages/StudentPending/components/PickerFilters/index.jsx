@@ -5,25 +5,16 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { AnimatePresence, LayoutGroup, m } from 'framer-motion'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from 'src/app/_ezs/partials/button'
-import { SelectClient, SelectDormitory, SelectStatusPay, SelectTags } from 'src/app/_ezs/partials/select'
 import { useRoles } from 'src/app/_ezs/hooks/useRoles'
-import { SelectStatusStudent } from 'src/app/_ezs/partials/select/SelectStatusStudent'
-import { useParams } from 'react-router-dom'
-import { useAuth } from 'src/app/_ezs/core/Auth'
+import { SelectStocks } from 'src/app/_ezs/partials/select'
 
 function PickerFilters({ children, filters, onChange, isLoading }) {
   const [visible, setVisible] = useState(false)
-  let { id } = useParams()
-  let { CrStocks } = useAuth()
   const { course_nang_cao, course_co_ban } = useRoles(['course_nang_cao', 'course_co_ban'])
 
   let defaultValues = {
     filter: {
-      MemberID: '',
-      CourseID: id,
-      Status: '',
-      Places: '',
-      no: ''
+      StockID: '',
     }
   }
 
@@ -35,13 +26,7 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
 
   useEffect(() => {
     if (visible) {
-      reset({
-        ...filters,
-        filter: {
-          ...filters.filter,
-          Tags: filters?.filter?.Tags ? filters.filter.Tags.split(',').map((x) => ({ value: x, label: x })) : null
-        }
-      })
+      reset(filters)
     }
   }, [visible])
 
@@ -91,91 +76,19 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                         </div>
                       </Dialog.Title>
                       <div className='p-5 overflow-auto grow'>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Học viên</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.MemberID'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectClient
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => field.onChange(val)}
-                                  StockRoles={course_co_ban.StockRoles}
-                                  StockID={CrStocks?.ID}
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Ký túc xá</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.Places'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectDormitory
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => {
-                                    field.onChange(val)
-                                  }}
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Trạng thái</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.Status'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectStatusStudent
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Trạng thái thanh toán</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='filter.no'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectStatusPay
-                                  isClearable
-                                  className='select-control'
-                                  value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
-                                />
-                              )}
-                            />
-                          </div>
-                        </div>
                         <div>
-                          <div className='font-light'>Tags</div>
+                          <div className='font-light'>Cơ sở</div>
                           <div className='mt-1'>
                             <Controller
-                              name='filter.Tags'
+                              name='filter.StockID'
                               control={control}
                               render={({ field: { ref, ...field }, fieldState }) => (
-                                <SelectTags
-                                  isMulti
+                                <SelectStocks
                                   isClearable
                                   className='select-control'
                                   value={field.value}
-                                  onChange={(val) => field.onChange(val)}
+                                  onChange={(val) => field.onChange(val?.value || '')}
+                                  StockRoles={course_co_ban.StockRoles}
                                 />
                               )}
                             />

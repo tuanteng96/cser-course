@@ -82,6 +82,11 @@ html.dark {
     text-transform: capitalize;
 }
 
+.select__menu-portal .select__menu .select__option.select__option--is-disabled {
+    opacity: .7;
+    text-decoration: line-through;
+}
+
 
 /* .select-control .select__menu .select__option.select__option--is-focused {
     color: var(--select-selected);

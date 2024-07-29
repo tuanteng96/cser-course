@@ -23,7 +23,7 @@ const SelectOrderItemsClient = ({ value, MemberID, OrderID, errorMessage, errorM
           }
         }
       }
-      return rs
+      return rs.filter(x => !x.CourseMemberID)
     },
     initialData: [],
     enabled: Number(MemberID) > 0 && Number(OrderID) > 0
