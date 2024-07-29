@@ -15,7 +15,7 @@ import moment from 'moment'
 
 const getOutOfDate = (rowData) => {
   if (rowData.Status === '1') return
-  let { Course, MinDate } = rowData
+  let { Course, MinDate, tongthoigian } = rowData
   let { DayCount } = Course
 
   if (!MinDate) return
@@ -23,6 +23,11 @@ const getOutOfDate = (rowData) => {
   let EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(DayCount), 'days').format('YYYY-MM-DD')
 
   let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
+
+  if(!window?.top?.GlobalConfig?.Admin?.khoahocinfo) {
+    EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(tongthoigian), 'days').format('YYYY-MM-DD')
+    ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
+  }
 
   if (ofDate < 0) {
     return `Quán hạn tốt nghiệp ${Math.abs(ofDate)} ngày`
@@ -171,7 +176,7 @@ function Student(props) {
         title: 'Tags',
         dataKey: 'Tags',
         width: width > 767 ? 250 : 180,
-        sortable: false,
+        sortable: false
       },
       {
         key: 'OrderItem.ToPay',
@@ -188,7 +193,9 @@ function Student(props) {
         width: width > 767 ? 160 : 120,
         sortable: false,
         cellRenderer: ({ rowData }) =>
-          `${rowData?.TotalCheck + Number(rowData?.TotalBefore || 0)}/${rowData?.Course?.Total}`
+          window?.top?.GlobalConfig?.Admin?.khoahocinfo
+            ? `${rowData?.TotalCheck + Number(rowData?.TotalBefore || 0)}/${rowData?.Course?.Total}`
+            : `${rowData?.TotalCheck + Number(rowData?.TotalBefore || 0)}/${rowData?.Sobuoi}`
       },
       {
         key: 'Order.RemainPay',

@@ -281,9 +281,11 @@ function PickerClient({ children, data }) {
                                     if (!val?.value) {
                                       setValue('OrderID', '')
                                       setValue('RemainPay', 0)
+                                      setValue('DayToPay', '')
                                     } else {
                                       setValue('OrderID', val?.OrderID)
                                       setValue('RemainPay', val?.RemainPay)
+                                      setValue('DayToPay', val?.DayToPay)
                                     }
                                   }}
                                   errorMessageForce={fieldState?.invalid}

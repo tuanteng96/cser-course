@@ -139,7 +139,8 @@ function Home(props) {
         title: 'Số buổi',
         dataKey: 'Total',
         width: width > 767 ? 160 : 120,
-        sortable: false
+        sortable: false,
+        hidden: !window?.top?.GlobalConfig?.Admin?.khoahocinfo
       },
       {
         key: 'Status',

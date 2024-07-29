@@ -23,7 +23,8 @@ const SelectOrderClient = ({ value, MemberID, errorMessage, errorMessageForce, c
                 ...o,
                 label: o.ProdTitle,
                 value: o.ID + '-' + x.ID,
-                disabled: o.CourseMemberID > 0
+                disabled: o.CourseMemberID > 0,
+                DayToPay: x.DayToPay
               }))
             : []
         }))
@@ -44,8 +45,6 @@ const SelectOrderClient = ({ value, MemberID, errorMessage, errorMessageForce, c
     
     if (firstIndex > -1) {
       let lastIndex = SelectOrders?.data[firstIndex].options?.findIndex((x) => x.ID === Number(keySplit[0]))
-      console.log(SelectOrders?.data[firstIndex].options)
-      console.log(keySplit[0])
       if (lastIndex > -1) return SelectOrders?.data[firstIndex].options[lastIndex]
     }
     return newValue
