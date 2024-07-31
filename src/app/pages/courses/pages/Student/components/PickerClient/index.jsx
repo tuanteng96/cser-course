@@ -58,7 +58,8 @@ function PickerClient({ children, data }) {
       TotalBefore: 0,
       RemainPay: 0,
       DayToPay: '',
-      Tags: ''
+      Tags: '',
+      DayStatus: ''
     },
     resolver: yupResolver(schemaAddEdit)
   })
@@ -67,7 +68,7 @@ function PickerClient({ children, data }) {
 
   useEffect(() => {
     if (visible && data) {
-      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places, RemainPay, DayToPay, Tags } =
+      let { ID, Member, CourseID, Desc, Status, OrderID, OrderItemID, TotalBefore, Places, RemainPay, DayToPay, DayStatus, Tags } =
         data
 
       reset({
@@ -82,7 +83,8 @@ function PickerClient({ children, data }) {
         Places: Places ? { label: Places, value: Places } : '',
         RemainPay,
         DayToPay,
-        Tags: Tags ? Tags.split(',').map((x) => ({ label: x, value: x })) : ''
+        Tags: Tags ? Tags.split(',').map((x) => ({ label: x, value: x })) : '',
+        DayStatus
       })
     }
   }, [data, visible])
@@ -98,7 +100,8 @@ function PickerClient({ children, data }) {
       MemberID: values?.MemberID ? values?.MemberID?.value : '',
       Tags: values?.Tags ? values?.Tags.map(x => x.value).join(',') : '',
       DayToPay: values?.DayToPay ? moment(values?.DayToPay).format('YYYY-MM-DD') : '',
-      OrderItemID: values?.OrderItemID ? values?.OrderItemID.split("-")[0] : ''
+      OrderItemID: values?.OrderItemID ? values?.OrderItemID.split("-")[0] : '',
+      DayStatus: !values?.ID ? moment().format('YYYY-MM-DD HH:mm') : values.Status !== data?.Status ? moment().format('YYYY-MM-DD HH:mm') : values.DayStatus
     }
     delete newValues.RemainPay
     addMutation.mutate(

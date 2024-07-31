@@ -261,24 +261,27 @@ function PickerCourses({ children, data }) {
                             />
                           </div>
                         </div>
-                        <div className='mb-3.5'>
-                          <div className='font-light'>Tổng số ngày</div>
-                          <div className='mt-1'>
-                            <Controller
-                              name='DayCount'
-                              control={control}
-                              render={({ field: { ref, ...field }, fieldState }) => (
-                                <InputNumber
-                                  placeholder='Nhập số ngày'
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                  errorMessageForce={fieldState?.invalid}
-                                  errorMessage={fieldState?.error?.message}
-                                />
-                              )}
-                            />
+                        {window?.top?.GlobalConfig?.Admin?.khoahocinfo && (
+                          <div className='mb-3.5'>
+                            <div className='font-light'>Tổng số ngày</div>
+                            <div className='mt-1'>
+                              <Controller
+                                name='DayCount'
+                                control={control}
+                                render={({ field: { ref, ...field }, fieldState }) => (
+                                  <InputNumber
+                                    placeholder='Nhập số ngày'
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    errorMessageForce={fieldState?.invalid}
+                                    errorMessage={fieldState?.error?.message}
+                                  />
+                                )}
+                              />
+                            </div>
                           </div>
-                        </div>
+                        )}
+
                         <div>
                           <div className='font-light'>Ghi chú</div>
                           <div className='mt-1'>
