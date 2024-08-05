@@ -86,7 +86,7 @@ function StudentPending(props) {
         dataKey: 'Order.ToPay',
         width: width > 767 ? 250 : 200,
         sortable: false,
-        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.Order?.ToPay)
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.OrderItem?.ToPay)
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
