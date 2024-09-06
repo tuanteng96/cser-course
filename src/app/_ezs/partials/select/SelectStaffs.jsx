@@ -44,11 +44,11 @@ const SelectStaffs = ({ isMulti, value, loading, disabled, StockRoles, ...props 
 
       return {
         nested: newData || [],
-        list: Items || []
+        list: Items ? Items.filter((x) => StockRoles.some((s) => s.value === x.groupid)) : []
       }
     }
   })
-
+  
   return (
     <>
       <Select
