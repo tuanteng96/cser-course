@@ -21,7 +21,7 @@ if (import.meta.env.DEV) {
       },
       {
         Title: 'Cser Hà Nội',
-        ID: 11384,
+        ID: 11409,
         ParentID: 778
       },
       {
@@ -40,12 +40,12 @@ if (import.meta.env.DEV) {
         ParentID: 778
       },
       {
-        Title: "Cơ sở A",
+        Title: 'Cơ sở A',
         ID: 11382,
         ParentID: 778
       },
       {
-        Title:  "Cơ sở B",
+        Title: 'Cơ sở B',
         ID: 11383,
         ParentID: 778
       }
@@ -67,12 +67,12 @@ if (import.meta.env.DEV) {
                   stocks: '',
                   stocksList: [
                     {
-                      Title: "Cser Hà Nội",
-                      ID: 11384,
+                      Title: 'Cser Hà Nội',
+                      ID: 11409,
                       ParentID: 778
                     },
                     {
-                      Title: "Cser HCM",
+                      Title: 'Cser HCM',
                       ID: 11385,
                       ParentID: 778
                     }
@@ -85,12 +85,12 @@ if (import.meta.env.DEV) {
                   stocks: '',
                   stocksList: [
                     {
-                      Title: "Cser Hà Nội",
-                      ID: 11384,
+                      Title: 'Cser Hà Nội',
+                      ID: 11409,
                       ParentID: 778
                     },
                     {
-                      Title: "Cser HCM",
+                      Title: 'Cser HCM',
                       ID: 11385,
                       ParentID: 778
                     }
@@ -102,9 +102,9 @@ if (import.meta.env.DEV) {
         }
       ]
     },
-    CrStockID: 11384,
+    CrStockID: 11409,
     token:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjExMSIsIm5iZiI6MTcyMjE0OTEwOSwiZXhwIjoxODA4NTQ5MTA5LCJpYXQiOjE3MjIxNDkxMDl9.p5CZuP-oqE_J5_nObp8OLaayv0h4COaOBHNZpGhGxAI'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwNjEzMzEwNjMyMiIsIm5iZiI6MTcyNjE5MjA1NiwiZXhwIjoxODEyNTkyMDU2LCJpYXQiOjE3MjYxOTIwNTZ9.7HqjEk5v120Ed8RwAqKjXbvx18e1NxWKfzh46mIiaDs'
   }
 }
 

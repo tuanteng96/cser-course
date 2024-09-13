@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import ReactBaseTable from 'src/app/_ezs/partials/table'
 import { AdjustmentsVerticalIcon, ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -12,6 +12,7 @@ import PickerClient from './components/PickerClient'
 import { formatString } from 'src/app/_ezs/utils/formatString'
 import { useWindowSize } from 'src/app/_ezs/hooks/useWindowSize'
 import moment from 'moment'
+import clsx from 'clsx'
 
 const getOutOfDate = (rowData) => {
   if (rowData.Status === '1') return
@@ -24,7 +25,7 @@ const getOutOfDate = (rowData) => {
 
   let ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
 
-  if(!window?.top?.GlobalConfig?.Admin?.khoahocinfo) {
+  if (!window?.top?.GlobalConfig?.Admin?.khoahocinfo) {
     EndDate = moment(MinDate, 'YYYY-MM-DD').add(Number(tongthoigian), 'days').format('YYYY-MM-DD')
     ofDate = moment(EndDate, 'YYYY-MM-DD').diff(new Date(), 'days')
   }
@@ -33,6 +34,41 @@ const getOutOfDate = (rowData) => {
     return `Quán hạn tốt nghiệp ${Math.abs(ofDate)} ngày`
   }
 }
+
+const RenderFooter = forwardRef(({ columns }, ref) => {
+  const refElm = useRef()
+  useImperativeHandle(ref, () => ({
+    getRef() {
+      return refElm
+    }
+  }))
+
+  return (
+    <div className='flex h-full border border-[#eeeeee]'>
+      <div className='w-[300px] min-w[300px] border-r border-[#eeeeee] flex items-center px-[15px]'>Tổng</div>
+      <div className='flex-1 overflow-auto no-scrollbar flex' id='el-footer' ref={refElm}>
+        {columns &&
+          columns.slice(1, columns.length - 1).map((column, index) => (
+            <div
+              className={clsx(
+                'border-r border-[#eeeeee] flex items-center px-[15px] font-semibold text-[16px]',
+                column?.footerClass
+              )}
+              style={{
+                width: column.width,
+                minWidth: column.width,
+                ...(column?.footerStyle || {})
+              }}
+              key={index}
+            >
+              {column.footerRenderer && column.footerRenderer()}
+            </div>
+          ))}
+      </div>
+      <div className='w-[150px] min-w[150px] border-l border-[#eeeeee]'></div>
+    </div>
+  )
+})
 
 function Student(props) {
   let { id } = useParams()
@@ -53,6 +89,8 @@ function Student(props) {
   })
 
   let { width } = useWindowSize()
+
+  const childCompRef = useRef()
 
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -184,7 +222,18 @@ function Student(props) {
         dataKey: 'OrderItem.ToPay',
         width: width > 767 ? 250 : 200,
         sortable: false,
-        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.OrderItem?.ToPay)
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.OrderItem?.ToPay),
+        footerRenderer: () => formatString.formatVNDPositive(data?.sum?.TongGiaTri)
+      },
+      {
+        key: 'OrderItem.Payed',
+        title: 'Đã thanh toán',
+        dataKey: 'OrderItem.ToPay',
+        width: width > 767 ? 250 : 200,
+        sortable: false,
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.OrderItem?.ToPay - rowData?.RemainPay),
+        footerRenderer: () => formatString.formatVNDPositive(data?.sum?.TongThanhToan),
+        footerClass: 'text-success'
       },
       {
         key: 'Total',
@@ -203,7 +252,9 @@ function Student(props) {
         dataKey: 'Order.RemainPay',
         width: width > 767 ? 220 : 150,
         sortable: false,
-        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.RemainPay)
+        cellRenderer: ({ rowData }) => formatString.formatVNDPositive(rowData?.RemainPay),
+        footerRenderer: () => formatString.formatVNDPositive(data?.sum?.TongNo),
+        footerClass: 'text-danger'
       },
       {
         key: 'DayToPay',
@@ -276,9 +327,8 @@ function Student(props) {
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [width]
+    [width, data]
   )
-
   return (
     <div className='flex flex-col h-full'>
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
@@ -360,6 +410,14 @@ function Student(props) {
           }))
         }
         footerClass='flex items-center justify-between w-full px-5 pb-5'
+        onScroll={({ scrollLeft }) => {
+          const el = childCompRef.current.getRef()
+          if (el?.current) {
+            el.current.scrollLeft = scrollLeft
+          }
+        }}
+        footerHeight={50}
+        footerRenderer={<RenderFooter ref={childCompRef} columns={columns} />}
       />
     </div>
   )
