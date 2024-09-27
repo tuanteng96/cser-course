@@ -144,7 +144,6 @@ function Attendance(props) {
           }
         }
       }
-
       return rs
         ? rs.map((x) => ({
             ...x,
@@ -276,7 +275,7 @@ function Attendance(props) {
               return (
                 <div>
                   <div>{fieldValue}</div>
-                  <div className="mt-px font-light">{resource?._resource?.extendedProps?.Member?.MobilePhone}</div>
+                  <div className='mt-px font-light'>{resource?._resource?.extendedProps?.Member?.MobilePhone}</div>
                 </div>
               )
             },
