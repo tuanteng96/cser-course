@@ -37,7 +37,7 @@ const SelectStaffs = ({ isMulti, value, loading, disabled, StockRoles, ...props 
           }
         }
       }
-
+      
       if (StockRoles && StockRoles.length > 0) {
         newData = newData.filter((x) => StockRoles.some((s) => s.value === x.groupid))
       }
@@ -52,7 +52,7 @@ const SelectStaffs = ({ isMulti, value, loading, disabled, StockRoles, ...props 
       }
     }
   })
-
+    
   return (
     <>
       <Select

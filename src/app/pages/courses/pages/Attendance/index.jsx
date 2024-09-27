@@ -272,7 +272,14 @@ function Attendance(props) {
             nowIndicator: true,
             now: moment(new Date()).format('YYYY-MM-DD HH:mm'),
             scrollTime: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-            //resourceLabelContent: () => 'A',
+            resourceLabelContent: ({ resource, fieldValue }) => {
+              return (
+                <div>
+                  <div>{fieldValue}</div>
+                  <div className="mt-px font-light">{resource?._resource?.extendedProps?.Member?.MobilePhone}</div>
+                </div>
+              )
+            },
             slotDuration: {
               days: 1
             },
