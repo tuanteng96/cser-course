@@ -144,6 +144,7 @@ function Attendance(props) {
           }
         }
       }
+
       return rs
         ? rs.map((x) => ({
             ...x,
@@ -170,7 +171,7 @@ function Attendance(props) {
     setVisible(false)
     setInitialValues(null)
   }
-
+  
   return (
     <div className='relative flex flex-col h-full fullcalendar-grow'>
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>

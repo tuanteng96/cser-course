@@ -140,7 +140,10 @@ function PickerFilters({ children, filters, onChange, isLoading }) {
                                   isClearable
                                   className='select-control'
                                   value={field.value}
-                                  onChange={(val) => field.onChange(val?.value || '')}
+                                  onChange={(val) => {
+                                    field.onChange(val ? val.map((x) => x.value) : [])
+                                  }}
+                                  isMulti
                                 />
                               )}
                             />

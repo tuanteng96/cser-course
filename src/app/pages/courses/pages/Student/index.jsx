@@ -46,7 +46,7 @@ const RenderFooter = forwardRef(({ columns }, ref) => {
   return (
     <div className='flex h-full border border-[#eeeeee]'>
       <div className='w-[300px] min-w[300px] border-r border-[#eeeeee] flex items-center px-[15px]'>Tổng</div>
-      <div className='flex-1 overflow-auto no-scrollbar flex' id='el-footer' ref={refElm}>
+      <div className='flex flex-1 overflow-auto no-scrollbar' id='el-footer' ref={refElm}>
         {columns &&
           columns.slice(1, columns.length - 1).map((column, index) => (
             <div
@@ -78,7 +78,7 @@ function Student(props) {
     filter: {
       MemberID: '',
       CourseID: id,
-      Status: '',
+      Status: [2,4],
       Places: '',
       Tags: '',
       no: ''
@@ -104,7 +104,11 @@ function Student(props) {
         ...filters,
         filter: {
           ...filters.filter,
-          Places: filters.filter?.Places ? filters.filter?.Places?.value : ''
+          Places: filters.filter?.Places ? filters.filter?.Places?.value : '',
+          Status:
+            filters?.filter?.Status && filters?.filter?.Status.length > 0
+              ? ',' + filters?.filter?.Status.toString()
+              : ''
         }
       }
       let { data } = await CourseAPI.listStudentCourse(newFilters)

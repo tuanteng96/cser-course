@@ -24,7 +24,11 @@ const SelectStatusStudent = ({ value, ...props }) => {
   return (
     <>
       <Select
-        value={options?.filter((x) => Number(x.value) === Number(value))}
+        value={
+          Array.isArray(value)
+            ? options?.filter((x) => value.includes(x.value))
+            : options?.filter((x) => Number(x.value) === Number(value))
+        }
         menuPosition='fixed'
         styles={{
           menuPortal: (base) => ({
