@@ -47,7 +47,8 @@ function Attendance(props) {
     ps: 100,
     filter: {
       CreateDate: new Date(),
-      CourseID: id
+      CourseID: id,
+      Status: "!(1,3)"
     }
   })
 
