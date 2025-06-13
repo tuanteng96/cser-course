@@ -47,8 +47,7 @@ function Attendance(props) {
     ps: 100,
     filter: {
       CreateDate: new Date(),
-      CourseID: id,
-      Status: "!(1,3)"
+      CourseID: id
     }
   })
 
@@ -72,7 +71,7 @@ function Attendance(props) {
         filter: {
           MemberID: '',
           CourseID: id,
-          Status: ''
+          Status: '!(1,3)'
         },
         order: {
           CreateDate: 'desc'
@@ -147,14 +146,26 @@ function Attendance(props) {
       }
 
       return rs
-        ? rs.map((x) => ({
-            ...x,
-            Title: x.ID ? 'Đã điểm danh' : 'Chưa điểm danh',
-            start: moment(x.CreateDate).toDate(),
-            end: moment(x.CreateDate).add(180, 'minutes').toDate(),
-            resourceIds: [x.MemberID],
-            className: 'min-h-[100px] !border-0 !bg-[#fff] flex-col justify-center !p-0'
-          }))
+        ? rs.map((x) => {
+            let obj = {
+              ...x,
+              Title: x.ID ? 'Đã điểm danh' : 'Chưa điểm danh',
+              start: moment(x.CreateDate).toDate(),
+              end: moment(x.CreateDate).add(180, 'minutes').toDate(),
+              resourceIds: [x.MemberID],
+              className: 'min-h-[100px] !border-0 !bg-[#fff] flex-col justify-center !p-0'
+            }
+            if (moment(obj.start).format('DD-MM-YYYY') !== moment(obj.end).format('DD-MM-YYYY')) {
+              obj.end = moment(x.CreateDate)
+                .set({
+                  hour: 23,
+                  minute: 59,
+                  second: 59
+                })
+                .toDate()
+            }
+            return obj
+          })
         : []
     },
     enabled: Boolean(Clients && Clients.length > 0)
@@ -172,7 +183,7 @@ function Attendance(props) {
     setVisible(false)
     setInitialValues(null)
   }
-  
+
   return (
     <div className='relative flex flex-col h-full fullcalendar-grow'>
       <div className='flex items-center justify-between px-5 py-3 border-b md:py-4'>
